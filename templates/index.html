@@ -1,0 +1,313 @@
+{% extends "base/guest.html" %} {% load static %} {% block main%}
+{% load custom_filters %}
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <span class="hero-badge">
+        <i class="fas fa-check-circle"></i> Approved by Govt. of Bangladesh
+      </span>
+      <h1>Bangladesh<br /><em>Technical Institute</em></h1>
+      <p class="hero-desc">
+        প্রযুক্তি শিক্ষায় বাংলাদেশের অগ্রগামী প্রতিষ্ঠান। সারাদেশে <?=
+        $total_institutes ?>+ শাখার মাধ্যমে মানসম্পন্ন কারিগরি শিক্ষা প্রদান করে
+        আসছি ২০১৮ সাল থেকে।
+      </p>
+      <div class="hero-cta">
+        <a href="student/login.php" class="btn btn-primary">
+          <i class="fas fa-graduation-cap"></i> Student Portal →
+        </a>
+        <a href="#courses" class="btn btn-outline">
+          <i class="fas fa-book-open"></i> Our Courses
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <h3>
+           {{ total_students|default_if_none:1200 }}+
+          </h3>
+          <p>Students</p>
+        </div>
+        <div class="stat-item">
+          <h3>
+           {{ total_centers|default:total_institutes }}+
+          </h3>
+          <p>Branches</p>
+        </div>
+        <div class="stat-item">
+          <h3>{{ total_courses|default:12 }}+</h3>
+          <p>Courses</p>
+        </div>
+        <div class="stat-item">
+          <h3>64</h3>
+          <p>Districts</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Portal cards -->
+    <div class="portal-stack">
+      <a href="{% url 'dashboard:institution_dashboard' %}" class="portal-card">
+        <div class="pc-icon"><i class="fas fa-chalkboard-user"></i></div>
+        <div class="portal-card-info">
+          <h3>Institute Portal</h3>
+          <p>
+            Admit students, manage sessions & payments (৳<?= e($adm_fee)
+            ?>/student)
+          </p>
+        </div>
+        <i class="fas fa-chevron-right pc-arr"></i>
+      </a>
+      <a href="{% url 'dashboard:admin_dashboard' %}" class="portal-card">
+        <div class="pc-icon"><i class="fas fa-gear"></i></div>
+        <div class="portal-card-info">
+          <h3>Admin Panel</h3>
+          <p>Central management — institutes, courses, sessions & settings</p>
+        </div>
+        <i class="fas fa-chevron-right pc-arr"></i>
+      </a>
+      <a href="{% url 'verify_certificate'%}" class="portal-card">
+        <div class="pc-icon"><i class="fas fa-qrcode"></i></div>
+        <div class="portal-card-info">
+          <h3>Verify Certificate</h3>
+          <p>Check authenticity of any BTI certificate by ID or QR code</p>
+        </div>
+        <i class="fas fa-chevron-right pc-arr"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== STATS BAND ==================== -->
+<div class="stats-band">
+  <div class="stats-grid">
+    <div class="sb-item">
+      <span class="sb-num">{{ total_students|default_if_none:1200 }}+</span>
+      <div class="sb-label">Total Students</div>
+    </div>
+    <div class="sb-item">
+      <span class="sb-num">{{ total_centers|default:total_institutes }}+</span>
+      <div class="sb-label">Training Centers</div>
+    </div>
+    <div class="sb-item">
+      <span class="sb-num"
+        >120+</span
+      >
+      <div class="sb-label">Certificates Issued</div>
+    </div>
+    <div class="sb-item">
+      <span class="sb-num">64</span>
+      <div class="sb-label">Districts Covered</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FEATURES ==================== -->
+<section class="features-section" id="about">
+  <div class="container">
+    <div style="text-align: center">
+      <span class="section-tag"
+        ><i class="fas fa-star-of-life"></i> বৈশিষ্ট্যসমূহ</span
+      >
+      <h2 class="section-title">Complete Digital Platform</h2>
+      <p class="section-sub">
+        সকল সেবা এক জায়গায় — শিক্ষার্থী, শাখা প্রতিষ্ঠান এবং কেন্দ্রীয়
+        কর্তৃপক্ষের জন্য
+      </p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><i class="fas fa-certificate"></i></div>
+        <h3>Digital Certificates</h3>
+        <p>
+          পরীক্ষায় উত্তীর্ণ হলে সাথে সাথে ডিজিটাল সার্টিফিকেট ডাউনলোড করুন।
+          প্রতিটিতে Unique ID ও QR Code থাকে।
+        </p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><i class="fas fa-id-card"></i></div>
+        <h3>5 Document Types</h3>
+        <p>
+          Certificate, Admit Card, Registration Card, Mark Sheet এবং Student ID
+          Card — সবই এক জায়গা থেকে।
+        </p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><i class="fas fa-building"></i></div>
+        <h3>Institute Management</h3>
+        <p>
+          শাখা প্রতিষ্ঠান থেকে শিক্ষার্থী ভর্তি করুন এবং ৳<?= e($adm_fee) ?>
+          ভর্তি ফি পরিশোধ করুন।
+        </p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><i class="fas fa-chart-line"></i></div>
+        <h3>Result Management</h3>
+        <p>
+          কেন্দ্রীয় Admin থেকে পরীক্ষার ফলাফল প্রকাশ করুন। শিক্ষার্থীরা তাদের
+          Portal থেকে রেজাল্ট দেখতে পাবে।
+        </p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><i class="fas fa-shield-alt"></i></div>
+        <h3>Certificate Verification</h3>
+        <p>
+          bti.edu.bd/verify — যেকোনো ব্যক্তি Certificate ID দিয়ে সার্টিফিকেটের
+          সত্যতা যাচাই করতে পারবে।
+        </p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon-wrap"><i class="fas fa-palette"></i></div>
+        <h3>Custom Templates</h3>
+        <p>
+          Admin থেকে নিজের ডিজাইন করা JPG/PNG template upload করুন। সব document
+          এ আপনার template ব্যবহার হবে।
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== COURSES (from DB) ==================== -->
+<section class="courses-section" id="courses">
+  <div class="container">
+    <div style="text-align: center">
+      <span class="section-tag"
+        ><i class="fas fa-graduation-cap"></i> আমাদের কোর্সসমূহ</span
+      >
+      <h2 class="section-title">Available Technical Courses</h2>
+      <p class="section-sub">
+        সরকার অনুমোদিত কারিগরি ও প্রযুক্তি শিক্ষা কোর্সসমূহ
+      </p>
+    </div>
+    <div class="course-grid">
+      {% for e in courses %}
+      <div class="course-item">
+        <i class="fas <?= e($icon) ?> ci-icon"></i>
+        <h4>{{e.name}}</h4>
+        <div class="ci-dur">
+          <i
+            class="fas fa-clock"
+            style="font-size: 0.65rem; margin-right: 3px"
+          ></i>
+          {{e.duration}}
+        </div>
+        <div class="ci-fee">
+          <i
+            class="fas fa-tag"
+            style="font-size: 0.65rem; margin-right: 3px"
+          ></i>
+          Exam Fee: ৳{{e.exam_fee}}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TRAINING CENTERS (from DB) ==================== -->
+<section id="training-centers" class="training-section">
+  <div class="container">
+    <div style="text-align: center">
+      <span class="section-tag"
+        ><i class="fas fa-map-marker-alt"></i> আমাদের অনুমোদিত প্রশিক্ষণ
+        কেন্দ্র</span
+      >
+      <h2 class="section-title">Authorized Training Centers</h2>
+      <p class="section-sub">
+        সারাদেশে BTI এর অধীনে স্বীকৃত
+        <strong>{{total_institutes}}+</strong> শাখা ও প্রশিক্ষণ কেন্দ্র। আপনার
+        নিকটস্থ কেন্দ্র খুঁজুন।
+      </p>
+    </div>
+
+    <div class="centers-grid">
+
+
+    {% for tc in training_centers %}
+    <div class="center-card">
+        <span class="center-district-badge">
+            <i class="fas fa-location-dot"></i> {{ tc.district }}
+        </span>
+
+        <h4>
+            <i class="fas fa-building" style="color: var(--blue-primary); margin-right: 5px"></i>
+            {{ tc.name }}
+        </h4>
+
+        <div class="center-location">
+            <i class="fas fa-map-pin"></i>
+            {% if tc.upazila %}
+                {{ tc.upazila }}, {{ tc.district }}
+            {% else %}
+                {{ tc.district }}
+            {% endif %}
+        </div>
+        {% if tc.courses %}
+        <div class="courses-offered">
+          {% for course in tc.courses|slice:":3" %}
+            <span class="course-tag">{{ course }}</span>
+          {% endfor %}
+            {% if tc.courses|length > 3 %}
+                <span class="course-tag" style="background: var(--blue-light)">
+                    +{{ tc.courses|length|add:"-3" }} more
+                </span>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="courses-offered">
+            <span class="course-tag">None</span>
+        </div>
+        {% endif %}
+
+        <div class="center-meta">
+
+            {% if tc.mobile %}
+            <a href="tel:{{ tc.mobile }}">
+                <i class="fas fa-phone"></i> {{ tc.mobile }}
+            </a>
+            {% endif %}
+
+            {% if tc.approved_date %}
+            <div class="tc-approved">
+                <i class="fas fa-check-circle"></i>
+                Approved: {{ tc.approved_date|date:"d M Y" }}
+            </div>
+            {% endif %}
+
+            {% if tc.reg_no %}
+            <div class="center-reg">
+                <i class="fas fa-hashtag" style="font-size: 0.65rem"></i>
+                {{ tc.reg_no }}
+            </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+  </div>
+</section>
+
+<!-- ==================== VERIFY CTA ==================== -->
+<section class="verify-section" id="verify-section">
+  <div class="container">
+    <i class="fas fa-search" style="font-size: 2.2rem; color: #ffd966"></i>
+    <h2>Verify a Certificate</h2>
+    <p>যেকোনো BTI সার্টিফিকেটের সত্যতা যাচাই করুন — Certificate ID দিয়ে।</p>
+    <form class="verify-form" action="{% url 'verify_certificate' %}" method="GET">
+      <input
+        type="text"
+        name="cert_id"
+        placeholder="Enter Certificate ID (e.g. BTI-CERT-A3F9D12E4B)"
+      />
+      <button type="submit" class="btn btn-gold">
+        <i class="fas fa-search"></i> Verify
+      </button>
+    </form>
+  </div>
+</section>
+{%endblock%}

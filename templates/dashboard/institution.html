@@ -1,0 +1,65 @@
+{% extends 'dashboard/admin_base.html'%}
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left"><h1>Admin Panel</h1></div>
+    <div class="topbar-right">
+     
+    </div>
+  </div>
+<div class="page-body">
+    <!-- Revenue card -->
+    <div class="revenue-card">
+      <div style="font-size:2.5rem;">💰</div>
+      <div>
+        <p style="font-size:12px;opacity:.6;margin-bottom:4px;">মোট রাজস্ব — ভর্তি ফি (৳৩০০ × শিক্ষার্থী)</p>
+        <div class="rev-big"><?= taka($total_rev) ?></div>
+      </div>
+      <div class="rev-breakdown">
+        <div class="rev-item"><div class="rn"><?= number_format($total_st) ?></div><div class="rl">Students</div></div>
+        <div class="rev-item"><div class="rn"><?= $total_inst ?></div><div class="rl">Institutes</div></div>
+        <div class="rev-item"><div class="rn"><?= taka($this_month) ?></div><div class="rl">This Month</div></div>
+        <div class="rev-item"><div class="rn" style="color:#F42A41;"><?= $pending_fee ?></div><div class="rl">Fee Pending</div></div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-icon ic-green">🏫</div><div class="stat-data"><h3>1</h3><p>Active Institutes</p></div></div>
+      <div class="stat-card"><div class="stat-icon ic-blue">👥</div><div class="stat-data"><h3>{{total_students}}</h3><p>Total Students</p></div></div>
+      <div class="stat-card"><div class="stat-icon ic-gold">📜</div><div class="stat-data"><h3>{{total_certificates}}</h3><p>Certificates Issued</p></div></div>
+      <div class="stat-card"><div class="stat-icon ic-red">⚠️</div><div class="stat-data"><h3>{{total_fee_pending}}</h3><p>Pending Fees</p></div></div>
+    </div>
+
+    <!-- Quick actions -->
+    <h3 style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:12px;">⚡ Quick Actions</h3>
+    <div class="qa-grid">
+      <a href="{% url 'dashboard:certificate_list'%}" class="qa-item"><span class="qa-ic">📜</span><span class="qa-lb">Issue Certificate</span></a>
+      <a href="{% url 'dashboard:deposit_page'%}"   class="qa-item"><span class="qa-ic">💳</span><span class="qa-lb">View Payments</span></a>
+      <a href="{% url 'dashboard:student_list'%}"   class="qa-item"><span class="qa-ic">👥</span><span class="qa-lb">All Students</span></a>
+      <a href="{% url 'verify_certificate' %}" class="qa-item"><span class="qa-ic">🔍</span><span class="qa-lb">Verify Cert</span></a>
+    </div>
+
+    <!-- Institutes + Payments -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+      <div class="card">
+        <div class="card-head"><span class="card-title">💳 Recent Payments</span><a href="{% url 'dashboard:deposit_page'%}" class="btn btn-white btn-sm">View All</a></div>
+        <div class="table-responsive">
+          <table>
+            <thead><tr><th>Institute</th><th>Type</th><th>Amount</th><th>Date</th></tr></thead>
+            <tbody>
+            {% for p in latest_payments%}
+            <tr>
+              <td>{{p.user}}</td>
+              <td>{{p.transaction_type}}</td>
+              <td><strong>{{p.amount}}</strong></td>
+              <td>{{p.created_at}}</td>
+              
+            </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock%}

@@ -1,0 +1,218 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block css%}
+<style>
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:18px;background:var(--white);padding:16px;border-radius:10px;border:1px solid var(--border);}
+.filter-bar .form-group{flex:1;min-width:160px;margin:0;}
+.student-detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;padding:20px;}
+.student-detail-overlay.open{display:flex;}
+.student-detail-box{background:var(--white);border-radius:14px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;}
+.table-container {
+  overflow-x: auto;
+  max-width: 100%;
+  border: 1px solid #ddd;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  white-space: nowrap; /* Prevents text wrapping to keep table clean */
+}
+
+</style>
+{% endblock%}
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="topbar">
+    <div class="topbar-left"><h1>All Students</h1><p>সকল শিক্ষার্থীর তথ্য পরিচালনা</p></div>
+    <div class="topbar-right">
+      <a class="btn btn-red" href="{% url 'dashboard:student_add'%}">+ Add Student</a>
+    </div>
+  </div>
+<div class="page-body">
+    <form method="GET">
+        <div class="filter-bar">
+            <div class="form-group">
+                <label class="form-label">Search</label>
+                <div class="search-wrap">
+                    <span class="search-ico">🔍</span>
+                    <input type="text" name="q" class="form-control" placeholder="Name / Reg No / Father" value="{{ q|default:'' }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Institute</label>
+                <select name="inst" class="form-control">
+                    <option value="">All Institutes</option>
+                    {% for item in institutions%}
+                    <option value="{{ item.id }}" {% if inst == item.id|stringformat:"s" %}selected{% endif %}>
+                      {{ item.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Session</label>
+                <select name="sess" class="form-control">
+                    <option value="">All Sessions</option>
+                    {% for item in sessions%}
+                      <option value="{{ item.id }}" {% if sess == item.id|stringformat:"s" %}selected{% endif %}>
+                        {{ item.name }}
+                      </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Status</label>
+                <select name="stat" class="form-control">
+                    <option value="">All Status</option>
+                    <option value="active" {% if stat == "active" %}selected{% endif %}>Active</option>
+                    <option value="inactive" {% if stat == "inactive" %}selected{% endif %}>Inactive</option>
+                    <option value="passed">Passed</option>
+                    <option value="failed">Failed</option>
+                </select>
+            </div>
+            <div class="form-group" style="flex:0;">
+                <label class="form-label">&nbsp;</label>
+                <div style="display:flex;gap:6px;">
+                    <button type="submit" class="btn btn-green btn-sm">Filter</button>
+                    <a href="{% url 'dashboard:student_list'%}" class="btn btn-white btn-sm">Clear</a>
+                </div>
+            </div>
+      </div>
+    </form>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">
+        Showing 
+        <strong>{{ page_obj.object_list|length }}</strong> 
+        of 
+        <strong>{{ page_obj.paginator.count }}</strong> students
+    </div>
+
+    <div class="card">
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th class="sticky-col-1">#</th>
+              <th class="sticky-col-2">Photo</th>
+              <th class="sticky-col-3">Name / Reg No</th>
+              <th>DOB</th>
+              <th>Mobile</th>
+              <th>Course</th>
+              <th>Session</th>
+              <th>Institute</th>
+              <th>Fee</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for s in page_obj %}
+          <tr>
+              <td class="sticky-col-1" style="color:var(--muted);font-size:12px;">
+                  {{ forloop.counter0|add:page_obj.start_index }}
+              </td>
+              <td class="sticky-col-2">
+                  <div class="td-avatar">
+                      {% if s.profile.profile_image %}
+                          <img src="{{ s.profile.profile_image.url }}" width="50" alt="">
+                      {% else %}
+                          {{ s.full_name|first|upper }}
+                      {% endif %}
+                  </div>
+              </td>
+
+              <!-- Name -->
+              <td class="sticky-col-3">
+                  <div class="td-name">{{ s.full_name }}</div>
+                  <div class="td-sub">{{ s.reg_no }}</div>
+                  {% if s.roll_no %}
+                      <div class="td-sub">Roll: {{ s.roll_no }}</div>
+                  {% endif %}
+              </td>
+
+
+              <!-- DOB -->
+              <td style="white-space:nowrap;">
+                  {{ s.dob|date:"d/m/Y" }}
+              </td>
+
+              <td>{{ s.mobile|default:"—" }}</td>
+
+              <!-- Course -->
+              <td>
+                  {{ s.courses.name }}
+              </td>
+
+              <!-- Session -->
+              <td>
+                  {{ s.session.name }}
+              </td>
+
+              <!-- Institution -->
+              <td>
+                  <div class="td-name" style="font-size:12px;">
+                      {{ s.institution.branch_code }}
+                  </div>
+                  <div class="td-sub">
+                      {{ s.institution.name|truncatechars:20 }}
+                  </div>
+              </td>
+              <td>{{ s.courses.exam_fee }}</td>
+
+              <!-- Status -->
+              <td>
+                  <span class="badge {% if s.is_active %}badge-green{% else %}badge-red{% endif %}">
+                      {{ s.is_active|yesno:"Active,Inactive" }}
+                  </span>
+              </td>
+
+              <!-- Action -->
+              <td style="white-space:nowrap;">
+                  <a href="{% url 'dashboard:student_edit' s.id %}" class="btn btn-red btn-sm">Edit</a>
+              </td>
+          </tr>
+
+          {% empty %}
+          <tr>
+              <td colspan="12" style="text-align:center;padding:30px;color:var(--muted);">
+                  No students found.
+              </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div style="padding:14px 20px;">
+          <div class="pager">
+
+              {% if page_obj.has_previous %}
+                  <a href="?page={{ page_obj.previous_page_number }}" class="page-btn">←</a>
+              {% endif %}
+
+              {% for i in page_obj.paginator.page_range %}
+                  {% if i >= page_obj.number|add:'-3' and i <= page_obj.number|add:'3' %}
+                      <a href="?page={{ i }}"
+                        class="page-btn {% if i == page_obj.number %}active{% endif %}">
+                          {{ i }}
+                      </a>
+                  {% endif %}
+              {% endfor %}
+
+              {% if page_obj.has_next %}
+                  <a href="?page={{ page_obj.next_page_number }}" class="page-btn">→</a>
+              {% endif %}
+
+          </div>
+      </div>
+      {% endif %}
+    </div>
+</div>
+
+{% endblock%}

@@ -1,0 +1,86 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left"><h1>Admin Panel</h1></div>
+    <div class="topbar-right">
+     
+    </div>
+  </div>
+<div class="page-body">
+    <!-- Revenue card -->
+    <div class="revenue-card">
+      <div style="font-size:2.5rem;">💰</div>
+      <div>
+        <p style="font-size:12px;opacity:.6;margin-bottom:4px;">মোট রাজস্ব — ভর্তি ফি (৳৩০০ × শিক্ষার্থী)</p>
+        <div class="rev-big">10</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-icon ic-green">🏫</div><div class="stat-data"><h3>{{total_institutions}}</h3><p>Active Institutes</p></div></div>
+      <div class="stat-card"><div class="stat-icon ic-blue">👥</div><div class="stat-data"><h3>{{total_students}}</h3><p>Total Students</p></div></div>
+      <div class="stat-card"><div class="stat-icon ic-gold">📜</div><div class="stat-data"><h3>{{total_certificates}}</h3><p>Certificates Issued</p></div></div>
+      <div class="stat-card"><div class="stat-icon ic-red">⚠️</div><div class="stat-data"><h3>{{total_fee_pending}}</h3><p>Pending Fees</p></div></div>
+    </div>
+
+    <!-- Quick actions -->
+    <h3 style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:12px;">⚡ Quick Actions</h3>
+    <div class="qa-grid">
+      <a href="{% url 'dashboard:institution_add' %}" class="qa-item"><span class="qa-ic">🏫</span><span class="qa-lb">Add Institute</span></a>
+      <a href="{% url 'dashboard:course_add' %}"    class="qa-item"><span class="qa-ic">📚</span><span class="qa-lb">Add Course</span></a>
+      <a href="{% url 'dashboard:session_add' %}"   class="qa-item"><span class="qa-ic">📅</span><span class="qa-lb">Add Session</span></a>
+      <a href="{% url 'dashboard:result_add' %}"    class="qa-item"><span class="qa-ic">📊</span><span class="qa-lb">Publish Results</span></a>
+      <a href="{% url 'dashboard:certificate_list'%}" class="qa-item"><span class="qa-ic">📜</span><span class="qa-lb">Issue Certificate</span></a>
+      <a href="{% url 'dashboard:deposit_page'%}"   class="qa-item"><span class="qa-ic">💳</span><span class="qa-lb">View Payments</span></a>
+      <a href="{% url 'dashboard:student_list'%}"   class="qa-item"><span class="qa-ic">👥</span><span class="qa-lb">All Students</span></a>
+      <a href="{% url 'verify_certificate' %}" class="qa-item"><span class="qa-ic">🔍</span><span class="qa-lb">Verify Cert</span></a>
+    </div>
+
+    <!-- Institutes + Payments -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+      <div class="card">
+        <div class="card-head"><span class="card-title">🏫 Recent Institutes</span><a href="{% url  'dashboard:institution_list' %}" class="btn btn-white btn-sm">View All</a></div>
+        <div class="table-responsive">
+          <table>
+            <thead><tr><th>Branch</th><th>Name</th><th>Students</th><th>Status</th></tr></thead>
+            <tbody>
+            {% for c in latest_institutions %}
+            <tr>
+              <td><strong>{{c.branch_code}}</strong></td>
+              <td>{{c.name}}</td>
+              <td>{{c.student_count}}</td>
+              <td>
+                <span class="badge badge-{% if c.is_active %}green{% else %}red{% endif %}">
+                    {{ c.is_active|yesno:"Active,Inactive" }}
+                </span>
+            </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">💳 Recent Payments</span><a href="{% url 'dashboard:deposit_page'%}" class="btn btn-white btn-sm">View All</a></div>
+        <div class="table-responsive">
+          <table>
+            <thead><tr><th>Institute</th><th>Type</th><th>Amount</th><th>Date</th></tr></thead>
+            <tbody>
+            {% for p in latest_payments%}
+            <tr>
+              <td>{{p.user}}</td>
+              <td>{{p.transaction_type}}</td>
+              <td><strong>{{p.amount}}</strong></td>
+              <td>{{p.created_at}}</td>
+              
+            </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock%}

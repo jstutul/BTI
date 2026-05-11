@@ -1,0 +1,98 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="topbar">
+    <div class="topbar-left"><h1>Institutes</h1><p>সকল শাখা প্রতিষ্ঠান পরিচালনা</p></div>
+    <div class="topbar-right">
+      <a class="btn btn-red" href="{% url 'dashboard:institution_add'%}">+ Add Institute</a>
+    </div>
+  </div>
+<div class="page-body">
+    <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
+      <div class="stat-card"><div class="stat-icon ic-green">🏫</div><div class="stat-data"><h3>{{total}}</h3><p>Total Institutes</p></div></div>
+      <div class="stat-card"><div class="stat-icon ic-blue">✅</div><div class="stat-data"><h3>{{active}}</h3><p>Active</p></div></div>
+      <div class="stat-card"><div class="stat-icon ic-gold">⏳</div><div class="stat-data"><h3>{{inactive}}</h3><p>Pending</p></div></div>
+    </div>
+    <div class="card">
+        <div class="card-head">
+            <span class="card-title">All Institutes</span>
+            <div class="card-actions">
+                <form method="GET" style="display:flex;gap:8px;">
+                    <div class="search-wrap"><span class="search-ico">🔍</span><input type="text" name="q" class="form-control" placeholder="Search..." style="width:200px;" value=""></div>
+                    <button type="submit" class="btn btn-red btn-sm">Search</button>
+                </form>
+            </div>
+        </div>
+      <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Branch Code</th>
+                        <th>Institute Name</th>
+                        <th>Director</th>
+                        <th>District</th>
+                        <th>Students</th>
+                        <th>Fee Collected</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ins in institutions %}
+                    <tr>
+                        <td>{{ ins.branch_code }}</td>
+                        <td>{{ ins.name }}</td>
+                        <td>{{ ins.director }}</td>
+                        <td>{{ ins.district }}</td>
+                        <td>0</td>
+                        <td>0.00</td>
+                        <td>
+                            {% if ins.is_active %}
+                                <span class="badge badge-green">Active</span>
+                            {% else %}
+                                <span class="badge badge-gray">Inactive</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <a class="btn btn-sm btn-gold" href="{% url 'dashboard:institution_edit' ins.id %}">Edit</a>
+                            <a class="btn btn-sm btn-red" href="{% url 'dashboard:institution_delete' ins.id %}"
+                            onclick="return confirm('Are you sure?')">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" style="text-align:center;padding:20px;color:var(--muted);">No institutes found.</td>
+                        </tr>
+                    {% endfor %}  
+                </tbody>
+            </table>
+      </div>
+      <div style="padding:14px 20px;">
+        <div class="pager">
+            {% if institutions.has_previous %}
+                <a href="?page={{ institutions.previous_page_number }}" class="page-btn">Prev</a>
+            {% endif %}
+
+            <span class="page-btn active">
+                {{ institutions.number }} / {{ institutions.paginator.num_pages }}
+            </span>
+
+            {% if institutions.has_next %}
+                <a href="?page={{ institutions.next_page_number }}" class="page-btn">Next</a>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endblock%}

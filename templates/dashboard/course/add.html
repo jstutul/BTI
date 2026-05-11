@@ -1,0 +1,66 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left"><h1>Courses & Sessions</h1><p>কোর্স ও সেশন পরিচালনা</p></div>
+    <div class="topbar-right">
+       {% if tab == 'courses' %}
+      <button class="btn btn-red" onclick="openModal('addCourseModal')">+ Add Course</button>
+       {% else %}
+      <button class="btn btn-red" onclick="openModal('addSessionModal')">+ Add Session</button>
+       {% endif %}
+    </div>
+  </div>
+<div class="page-body">
+    <!-- Tab switcher -->
+    <div style="display:flex;gap:0;margin-bottom:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden;width:fit-content;">
+      <a href="?tab=courses"  class="btn <?= $tab==='courses'?'btn-green':'btn-white' ?>" style="border-radius:0;">📚 Courses ({{ courses|length }})</a>
+      <a href="?tab=sessions" class="btn <?= $tab==='sessions'?'btn-green':'btn-white' ?>" style="border-radius:0;border-left:none;">📅 Sessions ({{ sessions|length }})</a>
+    </div>
+
+        <div class="card">
+            <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="card-title">Add New Course</span>
+               
+            </div>
+            <form method="POST" id="courseForm">
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group form-full">
+                            <label class="form-label">Course Name <span class="form-required">*</span></label>
+                            {{ course_form.name }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Duration</label>
+                        {{ course_form.duration }}
+                        </div>
+                        <div class="form-group">
+                        <label class="form-label">Exam Fee (৳)</label>
+                        {{ course_form.exam_fee }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                    <div class="form-group form-full">
+                        <label class="form-label">Certificate Type</label>
+                        {{ course_form.cert_type }}
+                    </div>
+                    </div>
+                    <div class="form-row">
+                    <div class="form-group form-full">
+                        <label class="form-label">Description</label>
+                        {{ course_form.description }}
+                    </div>
+                    </div>
+                </div>
+            <div class="modal-foot text-center">
+                <a type="button" class="btn btn-white" href="{% url 'dashboard:course_add'%}">Reset</a>
+                <button type="submit" class="btn btn-red">✓ Add Course</button></div>
+            </form>
+        </div>
+</div>
+
+{% endblock%}

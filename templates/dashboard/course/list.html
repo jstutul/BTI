@@ -1,0 +1,164 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="topbar">
+    <div class="topbar-left"><h1>Courses & Sessions</h1><p>কোর্স ও সেশন পরিচালনা</p></div>
+    <div class="topbar-right">
+       {% if tab == 'courses' %}
+      <a class="btn btn-red" href="{% url 'dashboard:course_add'%}">+ Add Course</a>
+       {% else %}
+      <a class="btn btn-red" href="{% url 'dashboard:session_add'%}">+ Add Session</a>
+       {% endif %}
+    </div>
+  </div>
+<div class="page-body">
+    <!-- Tab switcher -->
+    <div style="display:flex;gap:0;margin-bottom:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden;width:fit-content;">
+      <a href="?tab=courses"  class="btn <?= $tab==='courses'?'btn-green':'btn-white' ?>" style="border-radius:0;">📚 Courses ({{ courses|length }})</a>
+      <a href="?tab=sessions" class="btn <?= $tab==='sessions'?'btn-green':'btn-white' ?>" style="border-radius:0;border-left:none;">📅 Sessions ({{ sessions|length }})</a>
+    </div>
+
+    {% if tab == 'courses' %}
+        <div class="card">
+            <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="card-title">All Courses</span>
+               
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course Name</th>
+                            <th>Duration</th>
+                            <th>Exam Fee</th>
+                            <th>Certificate Type</th>
+                            <th>Students</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for c in courses %}
+                        <tr>
+                            <td><strong>{{ c.name }}</strong></td>
+                            <td>{{ c.duration }}</td>
+                            <td>{{ c.exam_fee }}</td>
+
+                            <td>
+                                {% if c.cert_type == 'both' %}
+                                    Course + IT Program
+                                {% else %}
+                                    {{ c.cert_type|title }}
+                                {% endif %}
+                            </td>
+
+                            <td>{{ c.students.count }}</td>
+
+                            <td>
+                                {% if c.is_active %}
+                                    <span class="badge badge-green">Active</span>
+                                {% else %}
+                                    <span class="badge badge-gray">Inactive</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <a href="{% url 'dashboard:course_edit' c.id %}" class="btn btn-white btn-sm">
+                                    Edit
+                                </a>
+
+                                <a href="{% url 'dashboard:course_delete' c.id %}"
+                                class="btn btn-red btn-sm"
+                                onclick="return confirm('Are you sure?')">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" style="text-align:center;">
+                                ❌ No courses found
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+   {% else %}
+    <div class="card">
+        <div class="card-head">
+            <span class="card-title">All Sessions</span>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Session</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Exam Date</th>
+                        <th>Students</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for se in sessions %}
+                    <tr>
+                        <td><strong>{{ se.name }}</strong></td>
+                        <td>{{ se.start_date }}</td>
+                        <td>{{ se.end_date }}</td>
+                        <td>{{ se.exam_date }}</td>
+                        <td>{{ se.students.count }}</td>
+
+                        <td>
+                            {% if se.status == 'active' %}
+                                <span class="badge badge-green">Active</span>
+                            {% elif se.status == 'completed' %}
+                                <span class="badge badge-gray">Completed</span>
+                            {% else %}
+                                <span class="badge badge-gold">{{ se.status|title }}</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                              <a href="{% url 'dashboard:session_edit' se.id %}" class="btn btn-white btn-sm">
+                                    Edit
+                                </a>
+
+                             <a href="{% url 'dashboard:session_delete' se.id %}"
+                                class="btn btn-red btn-sm"
+                                onclick="return confirm('Are you sure?')">
+                                    Delete
+                                </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" style="text-align:center;">
+                            ❌ No session found
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock%}

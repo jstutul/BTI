@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — BTI</title>
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+<link href="{% static 'alert/css/alert.css'%}" rel="stylesheet" />
+<link href="{% static 'alert/themes/default/theme.css'%}" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Playfair+Display:wght@700;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+{% block css%}{% endblock%}
+</head>
+<body>
+<div class="app-wrap">
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">
+      <a href="{% url 'home'%}">
+        {% if LOGO %}<img src="{% static LOGO %}" alt="Logo">{% else %}<div class="brand-logo-text">BTI</div>{% endif %}
+      </a>
+    </div>
+    <div class="brand-text"><h2>
+      {% if role == 'admin' %}
+      Admin Panel
+      {% elif role == 'institution' %}
+      Institution Panel
+      {% endif %}
+    </h2><span>bti.edu.bd</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-group-label">Overview</div>
+    {% if role == 'admin' %}
+    {% url 'dashboard:admin_dashboard' as dashboard_url %}
+    {% elif role == 'institution' %}
+        {% url 'dashboard:institution_dashboard' as dashboard_url %}
+    {% endif %}
+
+    <a href="{{ dashboard_url }}"
+      class="nav-link {% if request.path == dashboard_url %}active{% endif %}">
+        <span class="ni">🏠</span> Dashboard
+    </a>
+    
+    <div class="nav-group-label">Management</div>
+      {% if role == 'admin' %}
+      <a href="{% url 'dashboard:institution_list'%}" class="nav-link {% if request.resolver_match.url_name == 'institution_list' %}active{% endif %}"><span class="ni">🏫</span> Institutes</a>
+      <a href="{% url 'dashboard:course_list'%}" class="nav-link {% if request.resolver_match.url_name == 'course_list' or request.resolver_match.url_name == 'course_add' or request.resolver_match.url_name == 'course_edit' or request.resolver_match.url_name == 'session_add' or request.resolver_match.url_name == 'session_edit' %}active{% endif %}"><span class="ni">📚</span> Courses & Sessions</a>
+      {% endif %}
+      <a href="{% url 'dashboard:student_list' %}" class="nav-link {% if request.resolver_match.url_name == 'student_list' %}active{% endif %}"><span class="ni">👥</span> All Students</a>
+
+    
+    <div class="nav-group-label">Academic</div>
+    <a href="{% url 'dashboard:result_list'%}" class="nav-link {% if request.resolver_match.url_name == 'result_list' %}active{% endif %}"><span class="ni">📊</span> Results</a>
+    <a href="{% url 'dashboard:certificate_list'%}" class="nav-link {% if request.resolver_match.url_name == 'certificate_list' %}active{% endif %}"><span class="ni">📜</span> Certificates</a>
+    <div class="nav-group-label">Finance</div>
+    <a href="{% url 'dashboard:deposit_page'%}" class="nav-link {% if request.resolver_match.url_name == 'deposit_page' %}active{% endif %}"><span class="ni">💳</span> Payments</a>
+    <div class="nav-group-label">Settings</div>
+    <a href="{% url 'accounts:profile_view'%}"  class="nav-link {% if request.resolver_match.url_name == 'profile_view' %}active{% endif %}"><span class="ni">👤</span> Profile</a>
+    <a href="{% url 'verify_certificate'%}" class="nav-link"><span class="ni">🔍</span> Verify Certificate</a>
+  </nav>
+  <a href="{% url 'accounts:logout'%}" class="btn-logout">⎋ Logout</a>
+</aside>
+
+<div class="main-area">
+    {% block content%}{% endblock %}
+</div>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
+<script src="{% static 'alert/js/alert.js'%}"></script>
+<script>
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function editCourse(c){
+  document.getElementById('ecId').value=c.id;
+  document.getElementById('ecName').value=c.name;
+  document.getElementById('ecDuration').value=c.duration||'';
+  document.getElementById('ecFee').value=c.exam_fee||0;
+  document.getElementById('ecCertType').value=c.cert_type||'course';
+  document.getElementById('ecActive').value=c.is_active;
+  openModal('editCourseModal');
+}
+</script>
+</body>
+</html>

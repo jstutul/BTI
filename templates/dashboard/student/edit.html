@@ -1,0 +1,231 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block css%}
+<style>
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .3s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+/* checked state */
+.switch input:checked + .slider {
+    background-color: #28a745;
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(24px);
+}
+</style>
+{% endblock%}
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left"><h1>Edit Student</h1><p>সকল শিক্ষার্থীর তথ্য পরিচালনা</p></div>
+    <div class="topbar-right">
+         <a class="btn btn-red" href="{% url 'dashboard:student_list'%}" >Student List</a>
+    </div>
+  </div>
+  {% if form.errors %}
+    <div class="alert alert-error">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+    <div class="page-body">
+        <div class="card">
+            <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="card-title">Edit Student</span>
+            </div>
+
+            <form method="POST" id="courseForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Full Name <span class="form-required">*</span></label>
+                            {{ form.full_name }}
+                        </div>
+                        <div class="form-groupl">
+                            <label class="form-label">Email Address <span class="form-required">*</span></label>
+                            {{ form.email }}
+                        </div>
+                        
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Photo<span class="form-required">*</span></label>
+                            {{ form.profile_image }}
+                        </div>
+                        <div class="form-group">
+                            {% if student.profile.profile_image %}
+                                <div style="margin-bottom:10px;">
+                                    <img id="previewImage"
+                                        src="{{ student.profile.profile_image.url }}"
+                                        style="width:100px;height:100px;border-radius:8px;object-fit:cover;">
+                                </div>
+                            {% else %}
+                                <img id="previewImage"
+                                    style="display:none;width:100px;height:100px;border-radius:8px;">
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-groupl">
+                            <label class="form-label">Session <span class="form-required">*</span></label>
+                            {{ form.session }}
+                        </div>
+                         <div class="form-groupl">
+                            <label class="form-label">Course <span class="form-required">*</span></label>
+                            {{ form.courses }}
+                        </div>
+                        {% if request.user.profile.role == 'admin' %}
+                            <div class="form-groupl">
+                            <label class="form-label">Institution <span class="form-required">*</span></label>
+                                {{ form.institution }}
+                            </div>
+                        {%else%}
+                            <input type="hidden" class="form-control" value="{{ student.institution.name }}" readonly>
+                        {%endif%}
+                         
+                    </div>
+                   
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Father Name</label>
+                            {{ form.father_name }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mother Name</label>
+                            {{ form.mother_name }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth</label>
+                            {{ form.dob }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            {{ form.gender }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Blood Group</label>
+                            {{ form.blood_group }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mobile No</label>
+                            {{ form.mobile }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">NID No</label>
+                            {{ form.nid_no }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nationality</label>
+                            {{ form.nationality }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Education</label>
+                            {{ form.education }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Reg Book No</label>
+                            {{ form.reg_book_no }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Present Address</label>
+                            {{ form.present_address }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Permanent Address</label>
+                            {{ form.permanent_address }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                    <label class="form-label">Status</label>
+
+                    <label class="switch">
+                        {{ form.is_active }}
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                    </div>
+                </div>
+            <div class="modal-foot text-center">
+                <button type="button" class="btn btn-white" onclick="location.reload()">Reset</button>
+                <button type="submit" class="btn btn-red">✓ Edit Institution</button></div>
+            </form>
+        </div>
+    </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.querySelector('input[type="file"]');
+    const preview = document.getElementById('previewImage');
+
+    if (input) {
+        input.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    preview.src = evt.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
+{% endblock%}

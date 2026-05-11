@@ -1,0 +1,134 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left"><h1>Add Student</h1><p>সকল শিক্ষার্থীর তথ্য পরিচালনা</p></div>
+    <div class="topbar-right">
+         <a class="btn btn-red" href="{% url 'dashboard:student_list'%}" >Student List</a>
+    </div>
+  </div>
+  {% if form.errors %}
+    <div class="alert alert-error">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+    <div class="page-body">
+        <div class="card">
+            <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="card-title">Add Student</span>
+            </div>
+
+            <form method="POST" id="courseForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Full Name <span class="form-required">*</span></label>
+                            {{ form.full_name }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Photo<span class="form-required">*</span></label>
+                            {{ form.profile_image }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-groupl">
+                            <label class="form-label">Email Address <span class="form-required">*</span></label>
+                            {{ form.email }}
+                        </div>
+                         <div class="form-groupl">
+                            <label class="form-label">Session <span class="form-required">*</span></label>
+                            {{ form.session }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-groupl">
+                            <label class="form-label">Institution <span class="form-required">*</span></label>
+                            {{ form.institution }}
+                        </div>
+                         <div class="form-groupl">
+                            <label class="form-label">Course <span class="form-required">*</span></label>
+                            {{ form.courses }}
+                        </div>
+                    </div>
+                   
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Father Name</label>
+                            {{ form.father_name }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mother Name</label>
+                            {{ form.mother_name }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth</label>
+                            {{ form.dob }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            {{ form.gender }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Blood Group</label>
+                            {{ form.blood_group }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mobile No</label>
+                            {{ form.mobile }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">NID No</label>
+                            {{ form.nid_no }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nationality</label>
+                            {{ form.nationality }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Education</label>
+                            {{ form.education }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Reg Book No</label>
+                            {{ form.reg_book_no }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Present Address</label>
+                            {{ form.present_address }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Permanent Address</label>
+                            {{ form.permanent_address }}
+                        </div>
+                    </div>
+                </div>
+            <div class="modal-foot text-center">
+                <a type="button" class="btn btn-white" href="{% url 'dashboard:institution_add'%}">Reset</a>
+                <button type="submit" class="btn btn-red">✓ Add Institution</button></div>
+            </form>
+        </div>
+    </div>
+
+{% endblock%}

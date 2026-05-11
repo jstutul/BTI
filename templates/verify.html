@@ -1,0 +1,619 @@
+{% extends "base/guest.html" %} {% load static %} {% block main%}
+{% load custom_filters %}
+<!-- ==================== FEATURES ==================== -->
+ <style>
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header h2 {
+    font-size: 14px;
+    color: #333;
+}
+
+.header p {
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Profile */
+.profile {
+    text-align: center;
+    padding: 15px;
+}
+
+.profile img {
+    width: 110px;
+    height: 130px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Info Table */
+.info {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.info td {
+    padding: 10px;
+    border: 1px solid #eee;
+    font-size: 14px;
+}
+
+.info td:first-child {
+    font-weight: bold;
+    background: #f9f9f9;
+}
+
+/* Section Title */
+.section-title {
+    background: #0f9d58;
+    color: white;
+    padding: 3px;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* Result Tables */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.table th {
+    background: #f1f1f1;
+}
+
+/* Buttons */
+.buttons {
+    text-align: center;
+    padding: 20px;
+}
+
+.btn {
+    padding: 8px 15px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.btn-blue { background: #4285f4; color: white; }
+.btn-green { background: #34a853; color: white; }
+.btn-orange { background: #fbbc05; color: white; }
+
+.btn:hover {
+    opacity: 0.85;
+}
+
+.search-btn {
+    display: block;
+    margin: 10px auto 20px;
+    background: #1a73e8;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .info td {
+        display: block;
+        width: 100%;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .profile img {
+        width: 90px;
+        height: 110px;
+    }
+}
+</style>
+<section class="verify-section">
+  <div class="container">
+    <h2>Verify a Certificate</h2>
+
+    <form class="verify-form" method="GET">
+      <input type="text" name="cert_id"
+             value="{{ cert_id }}"
+             placeholder="Enter Certificate ID / Reg No / Roll No">
+      <button type="submit" class="btn btn-gold">Search</button>
+    </form>
+
+    {% if error %}
+      <p style="color:red">{{ error }}</p>
+    {% endif %}
+  </div>
+</section>
+
+{% if cert %}
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h2>{{ cert.result.student.institution.name }}</h2>
+        <p>Center Code: {{ cert.result.student.institution.branch_code }}</p>
+    </div>
+
+    <!-- Profile -->
+    <div class="profile">
+        {% if cert.result.student.profile.profile_image %}
+            <img src="{{ cert.result.student.profile.profile_image.url }}">
+        {% endif %}
+    </div>
+
+    <!-- Info -->
+    <table class="info">
+        <tr>
+            <td>Reg No.</td><td>{{ cert.result.student.reg_no }}</td>
+            <td>Roll No.</td><td>{{ cert.result.student.roll_no }}</td>
+        </tr>
+        <tr>
+            <td>Student Name</td><td>{{ cert.result.student.full_name }}</td>
+            <td>Father</td><td>{{ cert.result.student.father_name }}</td>
+        </tr>
+        <tr>
+            <td>Mother</td><td>{{ cert.result.student.mother_name }}</td>
+            <td>Session</td><td>{{ cert.result.session.name }}</td>
+        </tr>
+        <tr>
+            <td>Course</td><td>{{ cert.result.course.name }}</td>
+            <td>Duration</td><td>{{ cert.result.course.duration }}</td>
+        </tr>
+        <tr>
+            <td>DOB</td><td>{{ cert.result.student.dob }}</td>
+            <td>Certificate ID</td><td>{{ cert.cert_id }}</td>
+        </tr>
+    </table>
+
+    <!-- Final Results -->
+    <div class="section-title">Final Results</div>
+    <table class="table">
+        <tr>
+            <th>Written</th>
+            <th>Practical</th>
+            <th>Viva</th>
+            <th>Total</th>
+            <th>Grade</th>
+        </tr>
+        <tr>
+            <td>{{ cert.result.written_mark }}</td>
+            <td>{{ cert.result.practical_mark }}</td>
+            <td>{{ cert.result.viva_mark }}</td>
+            <td>{{ cert.result.total_mark }}</td>
+            <td>{{ cert.result.grade }}</td>
+        </tr>
+    </table>
+
+    <!-- Buttons -->
+   <div class="buttons"> 
+        <button class="btn btn-blue" id="btnAdmit" data-id='{{ cert.id }}'>Admit Card</button> 
+        <button class="btn btn-green" id="btnRegistration" data-id='{{ cert.id }}'>Registration</button> 
+        <button class="btn btn-orange" id="btnIdCard" data-id='{{ cert.id }}'>ID Card</button> 
+    </div> 
+    <hr/> 
+   <button id="btnSearch" class="btn btn-primary search-btn">Search Again</button>
+
+</div>
+
+
+{% endif %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.getElementById("btnSearch").addEventListener('click', function(){
+            window.location.href = '/verify';
+        });
+
+        document.getElementById("btnIdCard").addEventListener('click', function(){
+            let certId = this.getAttribute("data-id");
+            downloadIdCard(certId);
+        });
+        document.getElementById("btnAdmit").addEventListener('click', function(){
+            let certId = this.getAttribute("data-id");
+            downloadAdmitCard(certId);
+        });
+
+        document.getElementById("btnRegistration").addEventListener('click', function(){
+            let certId = this.getAttribute("data-id");
+            downloadRegistration(certId);
+        });
+
+        async function downloadRegistration(id) {
+
+            const response = await fetch(`/verify/registercard/${id}`);
+            const win = window.open("", "", "width=1200,height=800");
+            const data = await response.json();
+            win.document.write(`
+                <html>
+                <head>
+                    <title>Print</title>
+                    <style>
+                        @page {
+                            size: A4 portrait;
+                            margin: 0;
+                        }
+
+                        html, body {
+                            margin: 0;
+                            padding: 0;
+                            width: 210mm;
+                            height: 297mm;
+                            overflow: hidden;
+                        }
+
+                        #certificate {
+                            width: 210mm;
+                            height: 297mm;
+                            position: relative;
+                            overflow: hidden;
+                        }
+
+                        * {
+                            box-sizing: border-box;
+                        }
+
+                        /* prevent page break */
+                        div {
+                            page-break-inside: avoid;
+                        }
+                    </style>
+                </head>
+
+                <body onload="window.print(); window.close();">
+                    ${data.html}
+                </body>
+                </html>
+            `);
+
+            win.document.close();
+
+            // if (data.status === "error") {
+            //     alert(data.message);
+            //     return;
+            // }
+
+            // // create hidden iframe
+            // const iframe = document.createElement("iframe");
+
+            // iframe.style.position = "fixed";
+            // iframe.style.right = "0";
+            // iframe.style.bottom = "0";
+            // iframe.style.width = "0";
+            // iframe.style.height = "0";
+            // iframe.style.border = "0";
+
+            // document.body.appendChild(iframe);
+
+            // const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+            // doc.open();
+            // doc.write(`
+            //         ${data.html}
+            // `);
+            // doc.close();
+
+            // await new Promise(resolve => setTimeout(resolve, 500));
+            // await iframe.contentWindow.document.fonts.ready;
+
+            // const target = doc.body;
+
+            // const canvas = await html2canvas(target, {
+            //     scale: 3,
+            //     useCORS: true,
+            //     backgroundColor: "#fff"
+            // });
+
+            // const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+            // const { jsPDF } = window.jspdf;
+            // const pdf = new jsPDF("p", "mm", "a4");
+
+            // const pdfWidth = 210;
+            // const pdfHeight = 297;
+
+            // const margin = 0;
+
+            // const ratio = Math.min(
+            //     (pdfWidth - margin * 2) / canvas.width,
+            //     (pdfHeight - margin * 2) / canvas.height
+            // );
+
+            // const imgWidth = canvas.width * ratio;
+            // const imgHeight = canvas.height * ratio;
+
+            // const x = (pdfWidth - imgWidth) / 2;
+            // const y = (pdfHeight - imgHeight) / 2;
+
+            // pdf.addImage(imgData, "JPEG", x, y, imgWidth, imgHeight);
+
+            // pdf.save("register_card.pdf");
+
+            // document.body.removeChild(iframe);
+        }
+
+        async function downloadAdmitCard(id) {
+
+            const response = await fetch(`/verify/admit/${id}`);
+            const data = await response.json();
+
+            if (data.status === "error") {
+                alert(data.message);
+                return;
+            }
+            const win = window.open("", "", "width=1200,height=800");
+            win.document.write(`
+                <html>
+                <head>
+                    <title>Print</title>
+                    <style>
+                        @page {
+                            size: A4 landscape;
+                            margin: 0;
+                        }
+
+                        html, body {
+                            margin: 0;
+                            padding: 0;
+                            width: 297mm;
+                            height: 210mm;
+                            overflow: hidden;
+                        }
+
+                        #certificate {
+                            width: 210mm;
+                            height: 297mm;
+                            position: relative;
+                            overflow: hidden;
+                        }
+
+                        * {
+                            box-sizing: border-box;
+                        }
+
+                        /* prevent page break */
+                        div {
+                            page-break-inside: avoid;
+                        }
+                    </style>
+                </head>
+
+                <body onload="window.print(); window.close();">
+                    ${data.html}
+                </body>
+                </html>
+            `);
+
+            win.document.close();
+
+
+            // // create iframe
+            // const iframe = document.createElement("iframe");
+
+            // iframe.style.position = "fixed";
+            // iframe.style.right = "0";
+            // iframe.style.bottom = "0";
+            // iframe.style.width = "0";
+            // iframe.style.height = "0";
+            // iframe.style.border = "0";
+            // iframe.style.opacity = "0";
+
+            // document.body.appendChild(iframe);
+
+            // const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+            // doc.open();
+            // doc.write(data.html);
+            // doc.close();
+
+            // // wait render
+            // await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // await iframe.contentWindow.document.fonts.ready;
+
+            // const target = doc.querySelector(".print-container");
+
+            // const canvas = await html2canvas(target, {
+            //     scale: 4,
+            //     useCORS: true,
+            //     backgroundColor: "#ffffff",
+            //     width: target.scrollWidth,
+            //     height: target.scrollHeight
+            // });
+
+            // const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+            // const { jsPDF } = window.jspdf;
+
+            // // landscape A4
+            // const pdf = new jsPDF("landscape", "mm", "a4");
+
+            // // FULL LANDSCAPE SIZE
+            // const pdfWidth = 295;
+            // const pdfHeight = 215;
+
+            // pdf.addImage(
+            //     imgData,
+            //     "JPEG",
+            //     0,
+            //     0,
+            //     pdfWidth,
+            //     pdfHeight
+            // );
+
+            // pdf.save("admit_card.pdf");
+
+            // document.body.removeChild(iframe);
+        }
+
+
+        async function downloadIdCard(id) {
+            const response = await fetch(`/verify/idcard/${id}`);
+            const data = await response.json();
+
+            if (data.status === "error") {
+                alert(data.message);
+                return;
+            }
+
+            const win = window.open("", "", "width=1200,height=800");
+            win.document.write(`
+                <html>
+                <head>
+                    <title>Print</title>
+                    <style>
+                        @page {
+                            size: A4 landscape;
+                            margin: 0;
+                        }
+
+                        html, body {
+                            margin: 0;
+                            padding: 0;
+                            width: 297mm;
+                            height: 210mm; 
+                            overflow: hidden;
+                        }
+
+                        #certificate {
+                            width: 297mm;
+                            height: 210mm;
+                            position: relative;
+                            overflow: hidden;
+                        }
+
+                        * {
+                            box-sizing: border-box;
+                        }
+
+                        /* prevent page break */
+                        div {
+                            page-break-inside: avoid;
+                        }
+                    </style>
+                </head>
+
+                <body onload="window.print(); window.close();">
+                    ${data.html}
+                </body>
+                </html>
+            `);
+
+            win.document.close();
+            // create hidden iframe
+    //         const iframe = document.createElement("iframe");
+
+    //         iframe.style.position = "fixed";
+    //         iframe.style.right = "0";
+    //         iframe.style.bottom = "0";
+    //         iframe.style.width = "0";
+    //         iframe.style.height = "0";
+    //         iframe.style.border = "0";
+
+    //         document.body.appendChild(iframe);
+
+    //         const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+    //         doc.open();
+    //         doc.write(`
+    //             <html>
+    //             <head>
+    //                  <style>
+    //     body {
+    //         margin: 0;
+    //         padding: 20px;
+    //         background: #fff;
+    //     }
+
+    //     * {
+    //         box-sizing: border-box;
+    //     }
+
+    //     p, div, span {
+    //         line-height: 1.5;
+    //         letter-spacing: 0.2px;
+    //     }
+    // </style>
+    //             </head>
+    //             <body>
+    //                 ${data.html}
+    //             </body>
+    //             </html>
+    //         `);
+    //         doc.close();
+
+    //         // wait render + fonts
+    //         await new Promise(resolve => setTimeout(resolve, 500));
+    //         await iframe.contentWindow.document.fonts.ready;
+
+    //         const target = doc.body;
+
+    //         const canvas = await html2canvas(target, {
+    //             scale: 3,
+    //             useCORS: true,
+    //             backgroundColor: "#fff"
+    //         });
+
+    //         const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+    //         const { jsPDF } = window.jspdf;
+
+    //         // LANDSCAPE A4
+    //         const pdf = new jsPDF("l", "mm", "a4");
+
+    //         const pdfWidth = 297;
+    //         const pdfHeight = 210;
+
+    //         const margin = 10;
+
+    //         const ratio = Math.min(
+    //             (pdfWidth - margin * 2) / canvas.width,
+    //             (pdfHeight - margin * 2) / canvas.height
+    //         );
+
+    //         const imgWidth = canvas.width * ratio;
+    //         const imgHeight = canvas.height * ratio;
+
+    //         const x = (pdfWidth - imgWidth) / 2;
+    //         const y = (pdfHeight - imgHeight) / 2;
+
+    //         pdf.addImage(imgData, "JPEG", x, y, imgWidth, imgHeight);
+
+    //         pdf.save("admit_card.pdf");
+
+    //         document.body.removeChild(iframe);
+        }
+
+    })
+
+
+    
+
+</script>
+{%endblock%}

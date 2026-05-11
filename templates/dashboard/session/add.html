@@ -1,0 +1,61 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left"><h1>Courses & Sessions</h1><p>কোর্স ও সেশন পরিচালনা</p></div>
+    <div class="topbar-right">
+      <button class="btn btn-red" onclick="openModal('addSessionModal')">+ Add Session</button>
+    </div>
+  </div>
+<div class="page-body">
+    <!-- Tab switcher -->
+    <div style="display:flex;gap:0;margin-bottom:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden;width:fit-content;">
+      <a href="?tab=courses"  class="btn <?= $tab==='courses'?'btn-green':'btn-white' ?>" style="border-radius:0;">📚 Courses ({{ courses|length }})</a>
+      <a href="?tab=sessions" class="btn <?= $tab==='sessions'?'btn-green':'btn-white' ?>" style="border-radius:0;border-left:none;">📅 Sessions ({{ sessions|length }})</a>
+    </div>
+
+        <div class="card">
+            <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="card-title">Add New Session</span>
+               
+            </div>
+            <form method="POST" id="courseForm">
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group form-full">
+                            <label class="form-label">Session Name <span class="form-required">*</span></label>
+                            {{ form.name }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Start Date</label>
+                            {{ form.start_date }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Exam Fee (৳)</label>
+                            {{ form.end_date }}
+                            </div>
+                        </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Exam Date</label>
+                            {{ form.exam_date }}
+                        </div>
+                         <div class="form-group">
+                            <label class="form-label">Status</label>
+                            {{ form.status }}
+                        </div>
+                    </div>
+                    
+                </div>
+            <div class="modal-foot text-center">
+                <a type="button" class="btn btn-white" href="{% url 'dashboard:session_add'%}">Reset</a>
+                <button type="submit" class="btn btn-red">✓ Add Session</button></div>
+            </form>
+        </div>
+</div>
+
+{% endblock%}

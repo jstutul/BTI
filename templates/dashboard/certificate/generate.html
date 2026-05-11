@@ -1,0 +1,189 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block css%}
+<style>
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .3s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+/* checked state */
+.switch input:checked + .slider {
+    background-color: #28a745;
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(24px);
+}
+</style>
+{% endblock%}
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left"><h1>Generate Certificate</h1><p>সার্টিফিকেট ইস্যু</p></div>
+    <div class="topbar-right">
+         <a class="btn btn-red" href="{% url 'dashboard:certificate_list'%}" >Certificate List</a>
+    </div>
+  </div>
+  {% if form.errors %}
+    <div class="alert alert-error">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+    <div class="page-body">
+        <div class="card">
+            <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="card-title">Generate Certificate</span>
+            </div>
+            <form method="POST" id="courseForm" >
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Student Result<span class="form-required">*</span></label>
+                            {{ form.result }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Issue Date<span class="form-required">*</span></label>
+                            {{ form.issue_date }}
+                        </div>
+                    </div>
+                </div>
+                <div id="result-preview" style="display:none">
+                    <div style="overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.05);">
+
+                        <!-- HEADER -->
+                        <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:#f8fafc;border-bottom:1px solid #e5e7eb;">
+
+                            <img id="p_photo"
+                                src=""
+                                style="width:55px;height:55px;border-radius:10px;object-fit:cover;border:1px solid #ddd;display:none;">
+
+                            <div>
+                                <h3 style="margin:0;font-size:16px;">📄 Result Summary</h3>
+                                <small style="color:#666;">Certificate Preview</small>
+                            </div>
+
+                        </div>
+
+                        <!-- BODY -->
+                        <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:14px;">
+
+                            <div><b>Student:</b> <span id="p_student"></span></div>
+                            <div><b>Institution:</b> <span id="p_institution"></span></div>
+
+                            <div><b>Course:</b> <span id="p_course"></span></div>
+                            <div><b>Session:</b> <span id="p_session"></span></div>
+
+                            <div><b>Exam Date:</b> <span id="p_date"></span></div>
+                            <div><b>Grade:</b> <span id="p_grade" style="color:#16a34a;font-weight:bold;"></span></div>
+
+                        </div>
+
+                        <!-- MARKS -->
+                        <div style="padding:12px 16px;border-top:1px solid #e5e7eb;background:#fafafa;font-size:13px;">
+                            <b>Marks:</b>
+                            Written: <span id="p_written"></span> |
+                            Practical: <span id="p_practical"></span> |
+                            Viva: <span id="p_viva"></span> |
+                            <b>Total: <span id="p_total"></span></b>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-foot text-center">
+                <a type="button" class="btn btn-white" href="{% url 'dashboard:certificate_generate'%}">Reset</a>
+                <button type="submit" class="btn btn-red">✓ Generate Certificate</button></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+document.getElementById("id_result").addEventListener("change", function () {
+
+    let resultId = this.value;
+
+    if (!resultId) {
+        document.getElementById("result-preview").style.display = "none";
+        return;
+    }
+
+    fetch(`/dashboard/result/info/${resultId}/`)
+.then(res => res.json())
+.then(data => {
+
+    if (data.error) {
+        document.getElementById("result-preview").style.display = "none";
+        alert(data.error);
+        return;
+    }
+
+    document.getElementById("result-preview").style.display = "block";
+
+    document.getElementById("p_student").innerText = data.student;
+    document.getElementById("p_institution").innerText = data.institution;
+    document.getElementById("p_course").innerText = data.course;
+    document.getElementById("p_session").innerText = data.session;
+
+    document.getElementById("p_written").innerText = data.written;
+    document.getElementById("p_practical").innerText = data.practical;
+    document.getElementById("p_viva").innerText = data.viva;
+
+    document.getElementById("p_total").innerText = data.total;
+    document.getElementById("p_grade").innerText = data.grade;
+    document.getElementById("p_date").innerText = data.exam_date;
+
+    if (data.photo) {
+        document.getElementById("p_photo").src = data.photo;
+        document.getElementById("p_photo").style.display = "block";
+    } else {
+        document.getElementById("p_photo").style.display = "none";
+    }
+
+});
+});
+</script>
+
+{% endblock%}

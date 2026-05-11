@@ -1,0 +1,167 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ SITE_NAME }} | Govt. Approved Technical Education</title>
+    <meta
+      name="description"
+      content="{{ SITE_NAME }} — Government approved IT & technical education across Bangladesh."
+    />
+
+    <link rel="icon" href="{% static FAVICON %}" />
+    <link rel="shortcut icon" href="{% static FAVICON %}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'css/main.css'%}" />
+    <link rel="stylesheet" href="{% static 'css/style.css'%}" />
+  </head>
+  <body>
+    <!-- ==================== TOP GOVT BAR ==================== -->
+    <div class="govt-bar">
+      <div class="govt-inner">
+        <span>
+          <i class="fas fa-landmark"></i>
+          গণপ্রজাতন্ত্রী বাংলাদেশ সরকার | Government of the People's Republic of
+          Bangladesh
+        </span>
+        <span>
+          <i class="fas fa-registered"></i> Reg: {{REG_NO}}
+          <span class="govt-divider">|</span>
+          <a href="{% url 'dashboard:institution_dashboard' %}">Institute</a>
+          <span class="govt-divider">|</span>
+          <a href="{% url 'dashboard:admin_dashboard' %}">Admin</a>
+          <span class="govt-divider">|</span>
+          <a href="{% url 'verify_certificate'%}"
+            ><i class="fas fa-search"></i> Verify Certificate</a
+          >
+        </span>
+      </div>
+    </div>
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="nav-bar">
+      <div class="nav-container">
+        <!-- Brand: logo from DB, NO border -->
+        <a href="{% url 'home'%}" class="brand">
+          {% if LOGO %}
+          <div class="brand-logo-wrap">
+            <img src="{% static LOGO %}" alt="{{ SITE_NAME }} Logo" />
+          </div>
+          {% else %}
+          <div class="brand-logo-fallback">BTI</div>
+          {% endif %}
+          <div class="brand-text">
+            <h2>{{SITE_NAME}}</h2>
+            <span>bti.edu.bd — Empowering Technical Education</span>
+          </div>
+        </a>
+
+        <!-- Nav links -->
+        <div class="nav-links">
+          <a href="#about">About</a>
+          <a href="#courses">Courses</a>
+          <a href="#training-centers">Training Centers</a>
+          <a href="#verify-section">Verify Certificate</a>
+          <a href="{% url 'dashboard:institution_dashboard' %}">Institute</a>
+          <a href="{% url 'dashboard:admin_dashboard' %}" class="admin-badge"
+            >Admin Portal</a
+          >
+        </div>
+      </div>
+    </nav>
+    {% block main%}{%endblock%}
+
+    <!-- ==================== FOOTER (dynamic) ==================== -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="footer-logo-wrap">
+            {% if LOGO %}
+            <img
+              src="{% static LOGO %}"
+              alt="{{ SITE_NAME }}"
+              class="footer-logo-img"
+            />
+            {% else %}
+            <div class="footer-logo-text">BTI</div>
+            {% endif %}
+            <div>
+              <div class="footer-brand-name">{{SITE_NAME}}</div>
+              <div style="font-size: 0.68rem; color: #475569">bti.edu.bd</div>
+            </div>
+          </div>
+          <p>
+            Reg: {{REG_NO}} — Government approved IT & vocational education
+            institution of Bangladesh. Empowering students with technical skills
+            since 2018.
+          </p>
+          {% if EMAIL %}
+          <div class="footer-contact-item">
+            <i class="fas fa-envelope"></i
+            ><a href="mailto:{{EMAIL}}">{{EMAIL}}</a>
+          </div>
+          {% endif %} {% if PHONE %}
+          <div class="footer-contact-item">
+            <i class="fas fa-phone"></i><a href="tel:{{PHONE}}">{{PHONE}}</a>
+          </div>
+          {% endif %}
+          <div class="footer-contact-item">
+            <i class="fas fa-map-marker-alt"></i><span>{{ADDRESS}}</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Portals</h4>
+          <ul>
+            <li><a href="{% url 'dashboard:institution_dashboard' %}">Institute Login</a></li>
+            <li><a href="{% url 'dashboard:admin_dashboard' %}">Admin Login</a></li>
+            <li><a href="{% url 'verify_certificate'%}">Verify Certificate</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Courses</h4>
+          <ul>
+            {% for course in courses %}
+            <li>
+              <a href="#courses">{{course.name}}</a>
+            </li>
+            {%endfor%}
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="max-width: 1280px; margin: 0 auto">
+        <div class="footer-bottom">
+          <p>
+            © <?= date('Y') ?> <?= e($site_name) ?>. All rights reserved. |
+            Government Approved Technical Education
+          </p>
+          <div class="footer-bottom-links">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="verify/index.php">Verify Cert</a>
+            <a href="student/login.php">Student Portal</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
