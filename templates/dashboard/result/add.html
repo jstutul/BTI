@@ -50,6 +50,13 @@
 </style>
 {% endblock%}
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 <div class="topbar">
     <div class="topbar-left"><h1>Add Result</h1><p>পরীক্ষার ফলাফল পরিচালনা ও প্রকাশ</p></div>
     <div class="topbar-right">

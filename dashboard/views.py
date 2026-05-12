@@ -19,8 +19,8 @@ from django.http import HttpResponse
 from django.templatetags.static import static
 from .bkash_service import create_payment, execute_payment
 from decimal import Decimal
-
-
+from django.db import transaction,DatabaseError
+from django.db.models import Sum
 
 User = get_user_model()
 
@@ -631,40 +631,52 @@ def result_list(request):
 
 @role_required(['admin', 'institution'])
 def result_add(request):
-
     user = request.user
+    form = ResultForm(request.POST or None, user=user)
 
-    form = ResultForm(user=user)
     if user.profile.role == 'institution':
         form.fields['student'].queryset = Student.objects.filter(
             institution=user.profile.institution
         )
 
-    if request.method == "POST":
-        form = ResultForm(request.POST, user=user)
+    if request.method == "POST" and form.is_valid():
+        try:
+            with transaction.atomic():
+                # 1. Create result object but don't save to DB yet
+                result = form.save(commit=False)
 
-        if user.profile.role == 'institution':
-            form.fields['student'].queryset = Student.objects.filter(
-                institution=user.profile.institution
-            )
+                # 2. Safety Check: Does this student belong to this institution?
+                if user.profile.role == 'institution':
+                    if result.student.institution != user.profile.institution:
+                        messages.error(request, "Invalid student selection!")
+                        return redirect('dashboard:result_add')
 
-        if form.is_valid():
-            result = form.save(commit=False)
-
-            # extra safety check
-            if user.profile.role == 'institution':
-                if result.student.institution != user.profile.institution:
-                    messages.error(request, "Invalid student selection!")
+                # 3. Balance Check (Using the calculated balance)
+                # Note: 'user.balance' works if you added the @property to your User model
+                charge = Decimal(settings.STUDENT_FEE)
+                if user.balance < charge:
+                    messages.warning(request, 'Insufficient balance.')
                     return redirect('dashboard:result_add')
 
-            result.save()
+                # 4. Perform the operations
+                result.save() # Save the result to DB
+                
+                BalanceTransaction.objects.create(
+                    user=user,
+                    transaction_type='debit',
+                    amount=charge,
+                    note=f"Result published for student: {result.student.full_name}"
+                )
 
-            messages.success(request, "Result added successfully!")
-            return redirect('dashboard:result_list')
+                messages.success(request, "Result added successfully!")
+                return redirect('dashboard:result_list')
 
-    return render(request, 'dashboard/result/add.html', {
-        'form': form
-    })
+        except Exception as e:
+            # This will now help you see the REAL error in your console/terminal
+            print(f"Error: {e}") 
+            messages.error(request, "An unexpected error occurred. Please try again.")
+                
+    return render(request, 'dashboard/result/add.html', {'form': form})
     
 
 @role_required(['admin', 'institution'])
@@ -1011,12 +1023,43 @@ def get_result_info(request, pk):
     }
 
     return JsonResponse(data)
-
 @role_required(['admin', 'institution'])
 def deposit_page(request):
-    return render(request, "dashboard/payments/deposit.html")
+    user = request.user
+    role = user.profile.role
 
+    # Initialize base QuerySets
+    pays = BalanceTransaction.objects.all()
+    pending = Student.objects.filter(results__isnull=True)
 
+    if role == 'institution':
+        # Restrict data to only this institution
+        institution = user.profile.institution
+        pays = pays.filter(user=user)
+        pending = pending.filter(institution=institution)
+    
+    # Finalize QuerySets
+    pays = pays.order_by('-created_at')
+    pending = pending.distinct()
+
+    # Calculations
+    total_paid = pays.filter(transaction_type='debit').aggregate(Sum('amount'))['amount__sum'] or 0
+    total_deposit = pays.filter(transaction_type='credit').aggregate(Sum('amount'))['amount__sum'] or 0
+    
+    pending_count = pending.count()
+    # Ensure STUDENT_FEE is a Decimal or float in settings
+    charge = getattr(settings, 'STUDENT_FEE', 300)
+    pending_amount = pending_count * Decimal(charge)
+
+    context = {
+        'pays': pays,
+        'pending': pending,
+        'total_paid': total_paid,
+        'total_deposit': total_deposit,
+        'pending_count': pending_count,
+        'pending_amount': pending_amount,
+    }
+    return render(request, "dashboard/payments/deposit.html", context)
 
 @role_required(['admin', 'institution'])
 def bkash_pay(request):

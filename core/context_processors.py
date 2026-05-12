@@ -10,6 +10,7 @@ def global_context(request):
         'ADMISSION_FEE': getattr(settings, 'ADMISSION_FEE', ''),
         'FAVICON': getattr(settings, 'FAVICON', ''),
         'LOGO': getattr(settings, 'LOGO', ''),
+        'STUDENT_FEE': getattr(settings, 'STUDENT_FEE', '300'),
     }
 
     if request.user.is_authenticated:

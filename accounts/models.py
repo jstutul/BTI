@@ -7,9 +7,15 @@ import random
 import string
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
-
+from django.db.models import Sum
 
 class User(AbstractUser):
+    @property
+    def balance(self):
+        credits = self.transactions.filter(transaction_type='credit').aggregate(total=Sum('amount'))['total'] or 0
+        # Get total debits
+        debits = self.transactions.filter(transaction_type='debit').aggregate(total=Sum('amount'))['total'] or 0
+        return credits - debits
     def __str__(self):
         return self.username
     

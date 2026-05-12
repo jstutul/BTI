@@ -51,7 +51,7 @@
 {% endblock%}
 {% block content %}
   <div class="topbar">
-    <div class="topbar-left"><h1>Payments</h1><p>ভর্তি ফি পরিচালনা — ৳৩০০/শিক্ষার্থী</p></div>
+    <div class="topbar-left"><h1>Payments</h1><p>ভর্তি ফি পরিচালনা — ৳{{STUDENT_FEE}}/শিক্ষার্থী</p></div>
   </div>
   {% if form.errors %}
     <div class="alert alert-error">
@@ -70,53 +70,48 @@
 {% endif %}
     <div class="page-body">
         <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
-            <div class="stat-card"><div class="stat-icon ic-green">💰</div><div class="stat-data"><h3>100</h3><p>Total Paid</p></div></div>
-            <div class="stat-card"><div class="stat-icon ic-red">⏳</div><div class="stat-data"><h3>10</h3><p>Fee Pending</p></div></div>
-            <div class="stat-card"><div class="stat-icon ic-gold">📊</div><div class="stat-data"><h3>20</h3><p>Pending Amount</p></div></div>
+            <div class="stat-card"><div class="stat-icon ic-green">💰</div><div class="stat-data"><h3>{{ request.user.balance }}</h3><p>Balance</p></div></div>
+            <div class="stat-card"><div class="stat-icon ic-red">⏳</div><div class="stat-data"><h3>{{total_paid }}</h3><p>Total Paid</p></div></div>
+            <div class="stat-card"><div class="stat-icon ic-red">⏳</div><div class="stat-data"><h3>{{pending_amount }}</h3><p>Total Pending</p></div></div>
+            <div class="stat-card"><div class="stat-icon ic-gold">📊</div><div class="stat-data"><h3>{{total_deposit}}</h3><p>Total Deposit</p></div></div>
         </div>
         <div class="card">
             <div class="card-head"><span class="card-title">💳 Payment History</span></div>
             <div class="table-responsive">
                 <table>
-                <thead><tr><th>Student</th><th>Amount</th><th>Method</th><th>Txn ID</th><th>Date</th><th>Status</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Details</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
                 <tbody>
-                <?php foreach($pays as $p): ?>
-                <tr>
-                    <td><div class="td-name"><?= e($p['full_name']) ?></div><div class="td-sub"><?= e($p['reg_no']) ?></div></td>
-                    <td><?= taka($p['amount']) ?></td>
-                    <td><?= e($p['method']??'—') ?></td>
-                    <td><code><?= e($p['txn_id']??'—') ?></code></td>
-                    <td><?= fmt_date($p['created_at']) ?></td>
-                    <td><span class="badge badge-<?= $p['status']==='paid'?'green':'red' ?>"><?= ucfirst($p['status']) ?></span></td>
-                </tr>
-                <?php endforeach; ?>
-                <?php if(!$pays): ?><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--muted);">No payments yet.</td></tr><?php endif; ?>
+                {% for p in pays %}
+                    <tr>
+                        <td>
+                            <div class="td-name">{{ p.note|default:"Balance Deposit" }}</div>
+                        </td>
+                        <td>৳ {{ p.amount }}</td>
+                        <td>{{ p.get_transaction_type_display }}</td>
+                        <td>{{ p.created_at|date:"d M, Y" }}</td>
+                        <td>
+                            <span class="badge {% if p.transaction_type == 'credit' %}badge-green{% else %}badge-red{% endif %}">
+                                {{ p.transaction_type|title }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align:center;padding:20px;color:var(--muted);">No transactions yet.</td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
                 </table>
             </div>
             </div>
-        <div class="card" style="border:2px solid var(--bd-red);">
-        <div class="card-head"><span class="card-title" style="color:var(--bd-red);">⚠️ Pending Fee Students (<?= count($pending) ?>)</span></div>
-        <div class="table-responsive">
-            <table>
-            <thead><tr><th>Student</th><th>Reg No</th><th>Course</th><th>Amount Due</th><th>Action</th></tr></thead>
-            <tbody>
-            <?php foreach($pending as $p): ?>
-            <tr>
-                <td><?= e($p['full_name']) ?></td>
-                <td><?= e($p['reg_no']) ?></td>
-                <td><?= e($p['course_id']) ?></td>
-                <td><strong style="color:var(--bd-red);">৳৩০০</strong></td>
-                <td>
-                <button class="btn btn-gold btn-sm" onclick='payNow(<?= json_encode($p) ?>)'>💳 Pay Now</button>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-            </tbody>
-            </table>
-        </div>
-        </div>
-        
         <div class="card">
             <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
                 <span class="card-title"> Current Balance: <strong>৳ {{ request.user.balance }}</strong></span>

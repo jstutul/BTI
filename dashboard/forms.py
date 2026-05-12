@@ -239,7 +239,7 @@ class CertificateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         qs = Result.objects.select_related('student', 'course', 'session', 'student__institution')
-
+        qs = qs.filter(is_published=True)
         # ONLY PASSED STUDENTS
         qs = qs.filter(
             grade__in=['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'D']
