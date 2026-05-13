@@ -21,6 +21,11 @@ from .bkash_service import create_payment, execute_payment
 from decimal import Decimal
 from django.db import transaction,DatabaseError
 from django.db.models import Sum
+from django.urls import reverse
+import qrcode
+import os
+from io import BytesIO
+from django.core.files.base import ContentFile
 
 User = get_user_model()
 
@@ -703,6 +708,26 @@ def result_edit(request, pk):
 
 
 
+def generate_qr_code(cert_id, url):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    # Black QR, transparent background
+    img = qr.make_image(fill_color="black", back_color="transparent")
+
+    # Save to in-memory buffer
+    buffer = BytesIO()
+    img.save(buffer, format='PNG')
+    buffer.seek(0)
+
+    filename = f"qr_{cert_id}.png"
+    return ContentFile(buffer.read(), name=filename)
 
 
 @role_required(['admin', 'institution'])
@@ -733,6 +758,8 @@ def certificate_generate(request):
                 return render(request, 'dashboard/certificate/generate.html', {'form': form})
 
             cert.cert_id = "BTI-CERT-" + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+            qr_url = f"https://bti.edu.bd/verify/?cert_id={cert.cert_id}"
+            cert.qr_code = generate_qr_code(cert.cert_id, qr_url)
             cert.save()
 
             messages.success(request, "Certificate generated successfully!")
@@ -888,6 +915,10 @@ def certificate_html_api(request, pk):
         id=pk
     )
  
+    if not cert.qr_code or cert.qr_code.name == 'qr_images/default.png':
+        qr_url = f"https://bti.edu.bd/verify/?cert_id={cert.cert_id}"
+        cert.qr_code = generate_qr_code(cert.cert_id, qr_url)
+        cert.save(update_fields=['qr_code']) 
 
     # institution restriction
     if request.user.profile.role == "institution":

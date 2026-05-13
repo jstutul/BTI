@@ -359,6 +359,12 @@ class Certificate(models.Model):
     serial_no = models.CharField(max_length=50, unique=True)
     issue_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+    qr_code = models.ImageField(
+        upload_to='qr_images/',
+        default='qr_images/default.png',
+        blank=True,
+        null=True
+    )
 
   
 

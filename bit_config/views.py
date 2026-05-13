@@ -132,15 +132,6 @@ def register_card(request, pk):
             "message": "Certificate not found / not generated"
         }, status=404)
 
-    # 🔒 Institution restriction
-    if request.user.profile.role == "institution":
-        if cert.result.student.institution != request.user.profile.institution:
-            return JsonResponse({
-                "status": "error",
-                "message": "Not allowed"
-            }, status=403)
-
-    # ✅ Generate HTML
     html = render_to_string("verify/register.html", {
         "cert": cert,
         "result": cert.result,
@@ -149,7 +140,6 @@ def register_card(request, pk):
         "session": cert.result.session,
         "institution": cert.result.student.institution,
     })
-    print(cert.result.student.institution.profile.profile_image.url)
     return JsonResponse({
         "status": "success",
         "html": html
@@ -174,12 +164,12 @@ def id_card(request, pk):
         }, status=404)
 
     # 🔒 Institution restriction
-    if request.user.profile.role == "institution":
-        if cert.result.student.institution != request.user.profile.institution:
-            return JsonResponse({
-                "status": "error",
-                "message": "Not allowed"
-            }, status=403)
+    # if request.user.profile.role == "institution":
+    #     if cert.result.student.institution != request.user.profile.institution:
+    #         return JsonResponse({
+    #             "status": "error",
+    #             "message": "Not allowed"
+    #         }, status=403)
 
     # ✅ Generate HTML
     html = render_to_string("verify/idcard.html", {
@@ -215,12 +205,12 @@ def admit_card(request, pk):
         }, status=404)
 
     # 🔒 Institution restriction
-    if request.user.profile.role == "institution":
-        if cert.result.student.institution != request.user.profile.institution:
-            return JsonResponse({
-                "status": "error",
-                "message": "Not allowed"
-            }, status=403)
+    # if request.user.profile.role == "institution":
+    #     if cert.result.student.institution != request.user.profile.institution:
+    #         return JsonResponse({
+    #             "status": "error",
+    #             "message": "Not allowed"
+    #         }, status=403)
 
     # ✅ Generate HTML
     html = render_to_string("verify/admit.html", {
@@ -231,7 +221,7 @@ def admit_card(request, pk):
         "session": cert.result.session,
         "institution": cert.result.student.institution,
     })
-    print(cert.result.student.institution.profile.profile_image.url)
+
     return JsonResponse({
         "status": "success",
         "html": html
