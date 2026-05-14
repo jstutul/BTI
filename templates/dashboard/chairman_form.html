@@ -1,0 +1,146 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block content %}
+<style>
+    form a {
+    display: none;
+}
+</style>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="topbar">
+    <div class="topbar-left"><h1>Chaiman Signature</h1><p>চেয়ারম্যানের স্বাক্ষর</p></div>
+    <div class="topbar-right">
+         <a class="btn btn-red" href="{% url 'dashboard:chairman_settings'%}" >Institution List</a>
+    </div>
+  </div>
+  {% if form.errors %}
+    <div class="alert alert-error">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+    <div class="page-body">
+        <div class="card">
+            <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="card-title">Add/Edit Chairman Signature</span>
+               
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Signature<span class="form-required">*</span></label>
+                            {{ form.sign_image }}
+                        </div>
+                        <div class="form-group">
+                           {% if chairman.sign_image %}
+                                <img id="previewSign"
+                                    src="{{ chairman.sign_image.url }}"
+                                    style="width:120px;height:120px;border-radius:8px;object-fit:cover;">
+                            {% else %}
+                                <img id="previewSign"
+                                    style="display:none;width:120px;height:120px;border-radius:8px;">
+                            {% endif %}
+                        </div>
+                    </div>    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Certificate Background <span class="form-required">*</span></label>
+                             {{ form.certificate_bg }}
+                        </div>
+                        <div class="form-group">
+                           {% if chairman.certificate_bg %}
+                                <img id="preview_certificate"
+                                    src="{{ chairman.certificate_bg.url }}"
+                                    style="width:120px;height:120px;border-radius:8px;object-fit:cover;">
+                            {% else %}
+                                <img id="preview_certificate"
+                                    style="display:none;width:120px;height:120px;border-radius:8px;">
+                            {% endif %}
+                        </div>
+                    </div>  
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Admit Card Background <span class="form-required">*</span></label>
+                             {{ form.admitcard_bg  }}
+                        </div>
+                        <div class="form-group">
+                           {% if chairman.admitcard_bg  %}
+                                <img id="preview_admitcard"
+                                    src="{{ chairman.admitcard_bg.url }}"
+                                    style="width:120px;height:120px;border-radius:8px;object-fit:cover;">
+                            {% else %}
+                                <img id="preview_admitcard"
+                                    style="display:none;width:120px;height:120px;border-radius:8px;">
+                            {% endif %}
+                        </div>
+                    </div>  
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Registration Card Background <span class="form-required">*</span></label>
+                             {{ form.registration_bg  }}
+                        </div>
+                        <div class="form-group">
+                           {% if chairman.registration_bg  %}
+                                <img id="preview_registration"
+                                    src="{{ chairman.registration_bg.url }}"
+                                    style="width:120px;height:120px;border-radius:8px;object-fit:cover;">
+                            {% else %}
+                                <img id="preview_registration"
+                                    style="display:none;width:120px;height:120px;border-radius:8px;">
+                            {% endif %}
+                        </div>
+                    </div>  
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">ID Card Background <span class="form-required">*</span></label>
+                             {{ form.idcard_bg }}
+                        </div>
+                        <div class="form-group">
+                           {% if chairman.idcard_bg %}
+                                <img id="preview_idcard"
+                                    src="{{ chairman.idcard_bg.url }}"
+                                    style="width:120px;height:120px;border-radius:8px;object-fit:cover;">
+                            {% else %}
+                                <img id="preview_idcard"
+                                    style="display:none;width:120px;height:120px;border-radius:8px;">
+                            {% endif %}
+                        </div>
+                    </div>  
+                </div>
+            <div class="modal-foot text-center">
+                <a type="button" class="btn btn-white" href="{% url 'dashboard:chairman_settings'%}">Reset</a>
+                <button type="submit" class="btn btn-red">✓ Save Signature</button></div>
+            </form>
+        </div>
+    </div>
+<script>
+document.getElementById('id_sign_image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('previewSign');
+
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+    }
+});
+</script>
+{% endblock%}

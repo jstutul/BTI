@@ -49,7 +49,24 @@
                         {% endif %}
                     </div>
                 </div>
-                        
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Signature<span class="form-required">*</span></label>
+                        {{ profile_form.sign_image }}
+                    </div>
+                    <div class="form-group">
+                        {% if profile.sign_image %}
+                            <div style="margin-bottom:10px;">
+                                <img id="previewSign"
+                                    src="{{  profile.sign_image.url }}"
+                                    style="width:100px;height:100px;border-radius:8px;object-fit:cover;">
+                            </div>
+                        {% else %}
+                            <img id="previewSign"
+                                style="display:none;width:100px;height:100px;border-radius:8px;">
+                        {% endif %}
+                    </div>
+                </div>       
                 {% if institution_form %}
                     <div class="form-row">
                         <div class="form-group">
@@ -97,15 +114,30 @@
     </div>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelector('input[type="file"]').addEventListener('change', function(e){
-    const file = e.target.files[0];
-    const preview = document.getElementById('preview');
+    // document.querySelector('input[type="file"]').addEventListener('change', function(e){
+    //     const file = e.target.files[0];
+    //     const preview = document.getElementById('preview');
 
-    if(file){
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = 'block';
+    //     if(file){
+    //         preview.src = URL.createObjectURL(file);
+    //         preview.style.display = 'block';
+    //     }
+    // });
+    function previewFile(inputId, previewId) {
+        document.getElementById(inputId).addEventListener('change', function(e) {
+
+            const file = e.target.files[0];
+            const preview = document.getElementById(previewId);
+
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+            }
+        });
     }
-});
+
+    previewFile('profileImageInput', 'previewImage');
+    previewFile('signImageInput', 'previewSign');
 });
 </script>
 {% endblock%}

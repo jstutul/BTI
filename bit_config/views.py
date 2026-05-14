@@ -131,7 +131,7 @@ def register_card(request, pk):
             "status": "error",
             "message": "Certificate not found / not generated"
         }, status=404)
-
+    chairman =get_object_or_404(Chairman,id=1)
     html = render_to_string("verify/register.html", {
         "cert": cert,
         "result": cert.result,
@@ -139,6 +139,7 @@ def register_card(request, pk):
         "course": cert.result.course,
         "session": cert.result.session,
         "institution": cert.result.student.institution,
+        "chairman":chairman
     })
     return JsonResponse({
         "status": "success",
@@ -163,15 +164,7 @@ def id_card(request, pk):
             "message": "Certificate not found / not generated"
         }, status=404)
 
-    # 🔒 Institution restriction
-    # if request.user.profile.role == "institution":
-    #     if cert.result.student.institution != request.user.profile.institution:
-    #         return JsonResponse({
-    #             "status": "error",
-    #             "message": "Not allowed"
-    #         }, status=403)
-
-    # ✅ Generate HTML
+    chairman =get_object_or_404(Chairman,id=1)
     html = render_to_string("verify/idcard.html", {
         "cert": cert,
         "result": cert.result,
@@ -179,6 +172,7 @@ def id_card(request, pk):
         "course": cert.result.course,
         "session": cert.result.session,
         "institution": cert.result.student.institution,
+        "chairman":chairman
     })
 
     return JsonResponse({
@@ -204,15 +198,8 @@ def admit_card(request, pk):
             "message": "Certificate not found / not generated"
         }, status=404)
 
-    # 🔒 Institution restriction
-    # if request.user.profile.role == "institution":
-    #     if cert.result.student.institution != request.user.profile.institution:
-    #         return JsonResponse({
-    #             "status": "error",
-    #             "message": "Not allowed"
-    #         }, status=403)
+    chairman =get_object_or_404(Chairman,id=1)
 
-    # ✅ Generate HTML
     html = render_to_string("verify/admit.html", {
         "cert": cert,
         "result": cert.result,
@@ -220,6 +207,7 @@ def admit_card(request, pk):
         "course": cert.result.course,
         "session": cert.result.session,
         "institution": cert.result.student.institution,
+        "chairman":chairman
     })
 
     return JsonResponse({

@@ -1,5 +1,5 @@
 from django import forms
-from accounts.models import Course,Session,Institution,Student,Result,Certificate
+from accounts.models import Course,Session,Institution,Student,Result,Certificate,Chairman
 import random
 
 class CourseForm(forms.ModelForm):
@@ -255,6 +255,33 @@ class CertificateForm(forms.ModelForm):
         self.fields['result'].queryset = qs
 
 
+class ChairmanForm(forms.ModelForm):
+    class Meta:
+        model = Chairman
+        fields = ['sign_image','certificate_bg','admitcard_bg','registration_bg','idcard_bg', 'is_active']
+
+        widgets = {
+            'sign_image': forms.FileInput(attrs={
+                'id': 'id_sign_image',
+                'accept': 'image/*'
+            }),
+            'certificate_bg': forms.FileInput(attrs={
+                'id': 'id_certificate_bg',
+                'accept': 'image/*'
+            }),
+            'admitcard_bg': forms.FileInput(attrs={
+                'id': 'id_admitcard_bg',
+                'accept': 'image/*'
+            }),
+            'registration_bg': forms.FileInput(attrs={
+                'id': 'id_registration_bg',
+                'accept': 'image/*'
+            }),
+            'idcard_bg': forms.FileInput(attrs={
+                'id': 'id_idcard_bg',
+                'accept': 'image/*'
+            }),
+        }
 
 class CertificateEditForm(forms.ModelForm):
 

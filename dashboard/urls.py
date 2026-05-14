@@ -55,4 +55,6 @@ urlpatterns = [
     path("deposit/callback/", bkash_callback, name="bkash_callback"),
     path("transactions/", transaction_list, name="transactions"),
 
+    path('chairman/', chairman_settings, name='chairman_settings'),
+
 ]

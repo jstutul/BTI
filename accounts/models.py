@@ -384,6 +384,21 @@ class Certificate(models.Model):
         return f"{self.cert_id} - {self.result.student.full_name}"
 
 
+class Chairman(models.Model):
+    sign_image = models.ImageField(upload_to='chairman_images/',default='chairman_images/sign.png')
+    certificate_bg = models.ImageField(upload_to='chairman_images/',default='chairman_images/certnew22.jpeg')
+    admitcard_bg = models.ImageField(upload_to='chairman_images/',default='chairman_images/admitcard.jpeg')
+    registration_bg = models.ImageField(upload_to='chairman_images/',default='chairman_images/Regi.jpeg')
+    idcard_bg = models.ImageField(upload_to='chairman_images/',default='chairman_images/student-card.jpeg')
+    is_active = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        self.pk = 1  # force single row always
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return "Chairman"
+
 
 class PaymentDeposit(models.Model):
     STATUS_PENDING = "pending"
@@ -418,3 +433,5 @@ class PaymentDeposit(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.gateway} - {self.status} - {self.base_amount}"
+
+

@@ -2,8 +2,8 @@ from django.shortcuts import render,redirect,get_object_or_404
 from accounts.decorators import role_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from accounts.models import Course, Session,Institution,Profile,Student,Result,Certificate,PaymentDeposit,BalanceTransaction
-from dashboard.forms import CourseForm,SessionForm,InstitutionForm,StudentForm,StudentEditForm,ResultForm,CertificateForm,CertificateEditForm
+from accounts.models import Course, Session,Institution,Profile,Student,Result,Certificate,PaymentDeposit,BalanceTransaction,Chairman
+from dashboard.forms import CourseForm,SessionForm,InstitutionForm,StudentForm,StudentEditForm,ResultForm,CertificateForm,CertificateEditForm,ChairmanForm
 from django.contrib import messages
 from django.core.paginator import Paginator
 import random
@@ -914,6 +914,7 @@ def certificate_html_api(request, pk):
         ),
         id=pk
     )
+    chairman =get_object_or_404(Chairman,id=1)
  
     if not cert.qr_code or cert.qr_code.name == 'qr_images/default.png':
         qr_url = f"https://bti.edu.bd/verify/?cert_id={cert.cert_id}"
@@ -936,6 +937,8 @@ def certificate_html_api(request, pk):
             "course": cert.result.course,
             "session": cert.result.session,
             "institution": cert.result.student.institution,
+            "profile": cert.result.student.institution.profile,
+            "chairman":chairman
         }
     )
 
@@ -1209,4 +1212,20 @@ def transaction_list(request):
     })
 
 
+@role_required(['admin'])
+def chairman_settings(request):
+    chairman, created = Chairman.objects.get_or_create(pk=1)
 
+    if request.method == 'POST':
+        form = ChairmanForm(request.POST, request.FILES, instance=chairman)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Chairman Signature update successful.")
+            return redirect('dashboard:chairman_settings')
+    else:
+        form = ChairmanForm(instance=chairman)
+
+    return render(request, 'dashboard/chairman_form.html', {
+        'form': form,
+        'chairman': chairman
+    })

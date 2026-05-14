@@ -37,7 +37,7 @@
 
 <body>
     <div class="print-container" id="certificate">
-        <img src="{% static 'img/student-card.jpeg'%}" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1;">
+        <img src="{{chairman.idcard_bg.url}}" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1;">
         <p style="position: absolute;left: 214px; top: 106px;font-size: 16px;font-weight: 600;font-family: 'Arimo';">{{course.name}}</p>
         <p style="position: absolute;left: 214px;top: 129px;font-size: 16px;font-weight: 600;font-family: 'Arimo';">{{institution.branch_code}}</p>
         <img src="{% static 'img/bti_logo.png'%}" style="width: 80px;position: absolute;top: 112px;left: 800px;" alt="">

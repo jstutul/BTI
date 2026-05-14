@@ -55,10 +55,11 @@ class ProfileUpdateForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['profile_image'] 
+        fields = ['profile_image','sign_image'] 
 
         widgets = {
-            'profile_image': forms.FileInput(attrs={'class': 'form-control'}),
+            'profile_image': forms.FileInput(attrs={'class': 'form-control','id': 'profileImageInput'}),
+            'sign_image': forms.FileInput(attrs={'class': 'form-control','id': 'signImageInput'}),
         }
 
 class InstitutionForm(forms.ModelForm):
