@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from accounts.decorators import role_required
 from django.http import JsonResponse
+from django.core.mail import EmailMessage
 from django.views.decorators.csrf import csrf_exempt
 from accounts.models import Course, Session,Institution,Profile,Student,Result,Certificate,PaymentDeposit,BalanceTransaction,Chairman
 from dashboard.forms import CourseForm,SessionForm,InstitutionForm,StudentForm,StudentEditForm,ResultForm,CertificateForm,CertificateEditForm,ChairmanForm

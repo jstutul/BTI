@@ -10,6 +10,19 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from .forms import ProfileUpdateForm, SignUpForm,InstitutionForm,ProfileForm
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth import get_user_model
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.conf import settings
+import resend
+User = get_user_model()
+from dashboard.utils.email_utils import send_html_email
+
+
 
 class UserLoginView(LoginView):
     template_name = 'accounts/login.html'
@@ -143,3 +156,41 @@ def profile_edit(request):
         'institution_form': institution_form,
         'profile': profile
     })
+
+
+
+
+class ResendPasswordResetForm(PasswordResetForm):
+    def send_mail(self, subject_template_name, email_template_name,
+                  context, from_email, to_email, html_email_template_name=None):
+
+        # Render subject
+        subject = render_to_string(subject_template_name, context)
+        subject = ''.join(subject.splitlines())  # remove newlines
+
+        if html_email_template_name:
+            html_content = render_to_string(html_email_template_name, context)
+        else:
+            html_content = render_to_string(email_template_name, context)
+        text_content = render_to_string(email_template_name, context)
+
+        try:
+            send_html_email(
+                subject=subject,
+                to_email=to_email,
+                html_content=html_content,
+            )
+
+        except Exception as e:
+            import logging
+            logger = logging.getLogger('dashboard')
+            logger.error(f"Password reset email failed: {e}")
+
+
+class CustomPasswordResetView(PasswordResetView):
+    form_class = ResendPasswordResetForm
+    template_name = 'accounts/password_reset.html'
+    subject_template_name = 'accounts/password_reset_subject.txt'
+    email_template_name = 'accounts/password_reset_email.txt'
+    html_email_template_name = 'accounts/password_reset_email.html'
+    success_url = '/accounts/password-reset/done/'
