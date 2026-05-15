@@ -68,10 +68,9 @@
                         </td>
 
                         <td class="flex">
-                            <a class="btn btn-sm btn-gold" href="{% url 'dashboard:institution_edit' ins.id %}">Edit</a>
-                            <a class="btn btn-sm btn-red" href="{% url 'dashboard:institution_delete' ins.id %}"
-                            onclick="return confirm('Are you sure?')">
-                                Delete
+                                <a class="btn btn-sm btn-success" href="{% url 'dashboard:institution_active' ins.id %}"
+                            onclick="return confirm('Are you sure?want to active this registration.')">
+                                Approve
                             </a>
                         </td>
                     </tr>

@@ -181,6 +181,26 @@ def institution_list(request):
         'inactive': inactive,
     })
 
+
+@role_required(['admin'])
+def institution_list_pending(request):
+    institutions = Institution.objects.all()
+    total = institutions.count()
+    active = institutions.filter(profile__is_active=True).count()
+    inactive = institutions.filter(profile__is_active=False).count()
+    print(institutions.filter(is_active=False))
+    paginator = Paginator(institutions.filter(is_active=False), 10)  # 10 per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'dashboard/institution/pending.html', {
+        'institutions': page_obj,
+        'total': total,
+        'active': active,
+        'inactive': inactive,
+    })
+
+
 def generate_unique_branch_code():
     while True:
         number = random.randint(1000000000, 9999999999)  # 10 digits

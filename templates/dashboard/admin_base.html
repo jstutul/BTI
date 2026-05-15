@@ -43,6 +43,7 @@
     <div class="nav-group-label">Management</div>
       {% if role == 'admin' %}
       <a href="{% url 'dashboard:institution_list'%}" class="nav-link {% if request.resolver_match.url_name == 'institution_list' %}active{% endif %}"><span class="ni">🏫</span> Institutes</a>
+      <a href="{% url 'dashboard:institution_list_pending'%}" class="nav-link {% if request.resolver_match.url_name == 'institution_list_pending' %}active{% endif %}"><span class="ni">🏫</span>Pending Institutes</a>
       <a href="{% url 'dashboard:chairman_settings'%}" class="nav-link {% if request.resolver_match.url_name == 'chairman_settings' %}active{% endif %}"><span class="ni">🏫</span> Chairman Signature</a>
       <a href="{% url 'dashboard:course_list'%}" class="nav-link {% if request.resolver_match.url_name == 'course_list' or request.resolver_match.url_name == 'course_add' or request.resolver_match.url_name == 'course_edit' or request.resolver_match.url_name == 'session_add' or request.resolver_match.url_name == 'session_edit' %}active{% endif %}"><span class="ni">📚</span> Courses & Sessions</a>
       {% endif %}

@@ -28,6 +28,7 @@ urlpatterns = [
     path('admin/sessions/<int:pk>/delete/', session_delete, name='session_delete'),
 
     path('admin/institutions/', institution_list, name='institution_list'),
+    path('admin/institutions/pending/', institution_list_pending, name='institution_list_pending'),
     path('admin/institutions/add/', institution_add, name='institution_add'),
     path('admin/institutions/<int:pk>/edit/', institution_edit, name='institution_edit'),
     path('admin/institutions/<int:pk>/delete/', institution_delete, name='institution_delete'),
