@@ -31,6 +31,7 @@ urlpatterns = [
     path('admin/institutions/add/', institution_add, name='institution_add'),
     path('admin/institutions/<int:pk>/edit/', institution_edit, name='institution_edit'),
     path('admin/institutions/<int:pk>/delete/', institution_delete, name='institution_delete'),
+    path('admin/institutions/<int:pk>/active/', institution_active, name='institution_active'),
 
     # Admin & Institution 
     path('students/', student_list, name='student_list'),

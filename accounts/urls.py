@@ -13,6 +13,7 @@ app_name = 'accounts'
 
 urlpatterns = [
     path('login/', UserLoginView.as_view(), name='login'),
+    path('register/institution/', register_institution, name='register_institution'),
     path('logout/', LogoutView.as_view(), name='logout'),
 
     path('profile/', profile_view, name='profile_view'),

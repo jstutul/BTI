@@ -16,10 +16,8 @@
       <h1>{{SITE_NAME}}</h1>
       {% if request.GET.type == "admin" %}
       <p>Central Admin Panel — bti.edu.bd</p>
-      {% elif request.GET.type == "institution" %}
-      <p>Central Institution Panel — bti.edu.bd</p>
       {% else %}
-      <p>Central Student Panel — bti.edu.bd</p>
+      <p>Central Institution Panel — bti.edu.bd</p>
       {% endif %}
     </div>
 
@@ -36,9 +34,13 @@
     <p style="font-size: 13px; color: var(--muted); margin-bottom: 22px">
       Restricted access — Authorized personnel only
     </p>
-    {% if messages %} {% for message in messages %}
-    <div class="alert alert-error">{{ message }}</div>
-    {% endfor %} {% endif %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
     <form method="POST">
       {% csrf_token %} {% if form.errors %}
@@ -60,7 +62,8 @@
     </form>
     <div class="login-back">
       <a href="{% url 'home' %}">← Back to Home</a>
-      <a href="{% url 'accounts:password_reset' %}">Forget Password</a>
+      <a href="{% url 'accounts:password_reset' %}">Forget Password</a><br/>
+      <a href="{% url 'accounts:register_institution' %}">Register Institution</a>
     </div>
   </div>
 </div>

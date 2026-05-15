@@ -281,6 +281,17 @@ def institution_delete(request, pk):
     messages.success(request, "Institution deleted successfully!")
     return redirect('dashboard:institution_list')
 
+@role_required(['admin'])
+def institution_active(request, pk):
+    institution = get_object_or_404(Institution, pk=pk)
+    user = institution.profile.user  # 🔥 get user
+    institution.is_active=True
+    user.is_active=True
+    user.save()
+    institution.save()
+    messages.success(request, "Institution approved successfully!")
+    return redirect('dashboard:institution_list')
+
 @role_required(['admin', 'institution'])
 def student_list(request):
     students = Student.objects.select_related(

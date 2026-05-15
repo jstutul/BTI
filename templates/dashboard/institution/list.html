@@ -1,6 +1,12 @@
 {% extends 'dashboard/admin_base.html'%}
 {% load static %}
 {% block content %}
+<style>
+    .flex{
+        display: flex;
+        gap: 2px;
+    }
+</style>
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">
@@ -54,19 +60,27 @@
                         <td>0</td>
                         <td>0.00</td>
                         <td>
-                            {% if ins.is_active %}
+                            {% if ins.is_active and ins.profile.user.is_active %}
                                 <span class="badge badge-green">Active</span>
                             {% else %}
-                                <span class="badge badge-gray">Inactive</span>
+                                <span class="badge badge-gray">Inactive </span>
                             {% endif %}
                         </td>
 
-                        <td>
+                        <td class="flex">
+                            {% if ins.is_active and ins.profile.user.is_active %}
                             <a class="btn btn-sm btn-gold" href="{% url 'dashboard:institution_edit' ins.id %}">Edit</a>
                             <a class="btn btn-sm btn-red" href="{% url 'dashboard:institution_delete' ins.id %}"
                             onclick="return confirm('Are you sure?')">
                                 Delete
                             </a>
+                            {% else %}
+                                <a class="btn btn-sm btn-success" href="{% url 'dashboard:institution_active' ins.id %}"
+                            onclick="return confirm('Are you sure?want to active this registration.')">
+                                Approve
+                            </a>
+                            {% endif %}
+                            
                         </td>
                     </tr>
                     {% empty %}

@@ -21,7 +21,55 @@ from django.conf import settings
 import resend
 User = get_user_model()
 from dashboard.utils.email_utils import send_html_email
+from dashboard.views import generate_unique_branch_code
 
+def register_institution(request):
+    form = InstitutionForm()
+    if request.method == 'POST':
+        form = InstitutionForm(request.POST)
+
+        if form.is_valid():
+            branch_code = generate_unique_branch_code()
+            user = User.objects.create_user(
+                username=branch_code,
+                password=branch_code,
+                is_staff=True,
+                is_active=False
+            )
+            profile = user.profile
+
+            # # 4. create institution safely
+            institution = form.save(commit=False)
+            institution.profile = profile
+            institution.branch_code = branch_code
+            institution.is_active=False
+            institution.save()
+
+            name = form.cleaned_data.get("name")
+            director = form.cleaned_data.get("director")
+            email = form.cleaned_data.get("email")
+
+            html_content = render_to_string("emails/institution_created.html", {
+                "director":director,
+                "username": branch_code,
+                "password": branch_code,
+                "name": name,
+            })
+
+            send_html_email(
+                subject="Institution Account Created",
+                to_email=email,
+                html_content=html_content,
+            )
+
+            messages.success(
+                request,
+                f"Institution created! Username: {branch_code}, Password: {branch_code}"
+            )
+            return redirect('accounts:login')
+        else:
+            messages.error(request, "Form validation failed!")
+    return render(request,'accounts/institution.html',{'form':form})
 
 
 class UserLoginView(LoginView):
