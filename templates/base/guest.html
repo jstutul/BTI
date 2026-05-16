@@ -66,6 +66,10 @@
           <a href="{% url 'home' %}#courses">Courses</a>
           <a href="{% url 'home' %}#training-centers">Training Centers</a>
           <a href="{% url 'home' %}#verify-section">Verify Certificate</a>
+          <a href="{% url 'home' %}#about">About</a>
+          <a href="{% url 'home' %}#courses">Courses</a>
+          <a href="{% url 'home' %}#training-centers">Training Centers</a>
+          <a href="{% url 'home' %}#verify-section">Verify Certificate</a>
           <a href="{% url 'dashboard:institution_dashboard' %}">Institute</a>
           <a href="{% url 'dashboard:admin_dashboard' %}" class="admin-badge"
             >Admin Portal</a
@@ -127,6 +131,7 @@
           <h4>Courses</h4>
           <ul>
             {% for course in courses|slice:":5" %}
+            {% for course in courses|slice:":5" %}
             <li>
               <a href="#courses">{{course.name}}</a>
             </li>
@@ -148,6 +153,7 @@
         <div class="footer-bottom">
           <p>
            <span id="footer-text"></span>
+           <span id="footer-text"></span>
           </p>
           <div class="footer-bottom-links">
             <a href="{% url 'privacy_view' %}">Privacy</a>
@@ -158,5 +164,11 @@
         </div>
       </div>
     </footer>
+    <script>
+      const siteName = "{{SITE_NAME}}";
+      document.getElementById("footer-text").innerHTML =
+        "© " + new Date().getFullYear() + " " + siteName +
+        ". All rights reserved. | Government Approved Technical Education";
+    </script>
   </body>
 </html>
