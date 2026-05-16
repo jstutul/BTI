@@ -206,7 +206,7 @@ def generate_unique_branch_code():
         number = random.randint(1000000000, 9999999999)  # 10 digits
         code = f"BR-{number}"
 
-        if not Institution.objects.filter(branch_code=code).exists():
+        if not Institution.objects.filter(branch_code=code).exists() and not User.objects.filter(username=code).exists():
             return code
 
 

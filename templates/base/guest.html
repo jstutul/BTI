@@ -66,10 +66,10 @@
 
         <!-- Nav links -->
         <div class="nav-links">
-          <a href="#about">About</a>
-          <a href="#courses">Courses</a>
-          <a href="#training-centers">Training Centers</a>
-          <a href="#verify-section">Verify Certificate</a>
+          <a href="{% url 'home' %}#about">About</a>
+          <a href="{% url 'home' %}#courses">Courses</a>
+          <a href="{% url 'home' %}#training-centers">Training Centers</a>
+          <a href="{% url 'home' %}#verify-section">Verify Certificate</a>
           <a href="{% url 'dashboard:institution_dashboard' %}">Institute</a>
           <a href="{% url 'dashboard:admin_dashboard' %}" class="admin-badge"
             >Admin Portal</a
@@ -130,7 +130,7 @@
         <div class="footer-col">
           <h4>Courses</h4>
           <ul>
-            {% for course in courses %}
+            {% for course in courses|slice:":5" %}
             <li>
               <a href="#courses">{{course.name}}</a>
             </li>
@@ -151,17 +151,22 @@
       <div style="max-width: 1280px; margin: 0 auto">
         <div class="footer-bottom">
           <p>
-            © <?= date('Y') ?> <?= e($site_name) ?>. All rights reserved. |
-            Government Approved Technical Education
+           <span id="footer-text"></span>
           </p>
           <div class="footer-bottom-links">
             <a href="#">Privacy</a>
             <a href="#">Terms</a>
-            <a href="verify/index.php">Verify Cert</a>
-            <a href="student/login.php">Student Portal</a>
+            <a href="{% url 'verify_certificate'%}">Verify Cert</a>
+            <a href="{% url 'dashboard:institution_dashboard' %}">Institution Portal</a>
           </div>
         </div>
       </div>
     </footer>
+    <script>
+      const siteName = "{{SITE_NAME}}";
+      document.getElementById("footer-text").innerHTML =
+        "© " + new Date().getFullYear() + " " + siteName +
+        ". All rights reserved. | Government Approved Technical Education";
+    </script>
   </body>
 </html>
