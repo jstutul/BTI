@@ -58,5 +58,6 @@ urlpatterns = [
     path("transactions/", transaction_list, name="transactions"),
 
     path('chairman/', chairman_settings, name='chairman_settings'),
+    path('contact/', contact_view, name='contact_view'),
 
 ]

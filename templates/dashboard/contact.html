@@ -1,0 +1,47 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block content %}
+<div class="topbar">
+    <div class="topbar-left"><h1>Contact Us</h1><p>যোগাযোগের জন্য</p></div>
+  </div>
+<div class="page-body">
+    <div class="card">
+        <div class="card-head">
+            <span class="card-title">All Request</span>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for se in data %}
+                    <tr>
+                        <td><strong>{{ se.name }}</strong></td>
+                        <td>{{ se.email }}</td>
+                        <td>{{ se.phone }}</td>
+                        <td>{{ se.subject }}</td>
+                        <td>{{ se.message }}</td>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align:center;">
+                            ❌ No request found
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock%}

@@ -1,0 +1,74 @@
+{% extends "base/guest.html" %} {% load static %} {% block main%}
+{% load custom_filters %}
+<!-- ==================== HERO ==================== -->
+<style>
+    .course-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1rem;
+        margin-top: 2.5rem;
+    }
+
+@media (max-width: 768px) {
+    .course-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .course-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<!-- ==================== COURSES (from DB) ==================== -->
+<section class="courses-section">
+  <div class="container">
+    <div style="text-align: center">
+      <span class="section-tag"
+        ><i class="fas fa-graduation-cap"></i> আমাদের কোর্সসমূহ</span
+      >
+      <h2 class="section-title">Available Technical Courses</h2>
+      <p class="section-sub">
+        সরকার অনুমোদিত কারিগরি ও প্রযুক্তি শিক্ষা কোর্সসমূহ
+      </p>
+    </div>
+    <div class="course-grid">
+      {% for e in courses %}
+      <div class="course-item">
+        <i class="fas <?= e($icon) ?> ci-icon"></i>
+        <h4>{{e.name}}</h4>
+        <div class="ci-dur">
+          <i
+            class="fas fa-clock"
+            style="font-size: 0.65rem; margin-right: 3px"
+          ></i>
+          {{e.get_custom_duration}}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ==================== VERIFY CTA ==================== -->
+<section class="verify-section" id="verify-section">
+  <div class="container">
+    <i class="fas fa-search" style="font-size: 2.2rem; color: #ffd966"></i>
+    <h2>Verify a Certificate</h2>
+    <p>যেকোনো BTI সার্টিফিকেটের সত্যতা যাচাই করুন — Certificate ID দিয়ে।</p>
+    <form class="verify-form" action="{% url 'verify_certificate' %}" method="GET">
+      <input
+        type="text"
+        name="cert_id"
+        placeholder="Enter Certificate ID (e.g. BTI-CERT-A3F9D12E4B)"
+      />
+      <button type="submit" class="btn btn-gold">
+        <i class="fas fa-search"></i> Verify
+      </button>
+    </form>
+  </div>
+</section>
+{%endblock%}

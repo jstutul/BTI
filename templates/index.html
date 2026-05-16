@@ -1,6 +1,25 @@
 {% extends "base/guest.html" %} {% load static %} {% block main%}
 {% load custom_filters %}
-<!-- ==================== HERO ==================== -->
+<style>
+    .course-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1rem;
+        margin-top: 2.5rem;
+    }
+
+@media (max-width: 768px) {
+    .course-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .course-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 <section class="hero">
   <div class="hero-grid">
     <div>
@@ -47,6 +66,7 @@
 
     <!-- Portal cards -->
     <div class="portal-stack">
+      <!-- <img src="{% static 'img/bit.png'%}"/> -->
       <a href="{% url 'dashboard:institution_dashboard' %}" class="portal-card">
         <div class="pc-icon"><i class="fas fa-chalkboard-user"></i></div>
         <div class="portal-card-info">
@@ -179,6 +199,7 @@
       <p class="section-sub">
         সরকার অনুমোদিত কারিগরি ও প্রযুক্তি শিক্ষা কোর্সসমূহ
       </p>
+      <a lass="section-sub" href="{% url 'courses_view'%}">View All</a>
     </div>
     <div class="course-grid">
       {% for e in courses %}
@@ -219,12 +240,13 @@
         <strong>{{total_institutes}}+</strong> শাখা ও প্রশিক্ষণ কেন্দ্র। আপনার
         নিকটস্থ কেন্দ্র খুঁজুন।
       </p>
+       <a lass="section-sub" href="{% url 'trainning_center'%}">View All</a>
     </div>
 
     <div class="centers-grid">
 
 
-    {% for tc in training_centers %}
+    {% for tc in training_centers|slice:":6" %}
     <div class="center-card">
         <span class="center-district-badge">
             <i class="fas fa-location-dot"></i> {{ tc.district }}

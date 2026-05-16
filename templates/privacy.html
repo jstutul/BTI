@@ -1,0 +1,295 @@
+{% extends "base/guest.html" %}
+{% load static %}
+{% block main %}
+
+<style>
+    .privacy-section{
+        padding: 3rem 0;
+    }
+
+    .privacy-wrapper{
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .privacy-card{
+        background: linear-gradient(to bottom right, #ffffff, #f8fbff);
+        border: 1px solid var(--blue-border);
+        border-radius: var(--radius-xl);
+        padding: 2rem;
+        box-shadow: var(--shadow-sm);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .privacy-card::before{
+        content: "";
+        position: absolute;
+        top: -120px;
+        right: -120px;
+        width: 260px;
+        height: 260px;
+        background: rgba(37, 99, 235, 0.05);
+        border-radius: 50%;
+    }
+
+    .privacy-header{
+        text-align: center;
+        margin-bottom: 2.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .privacy-icon{
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        background: var(--blue-primary);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto auto 1rem;
+        font-size: 1.8rem;
+        box-shadow: 0 10px 25px rgba(37, 99, 235, .25);
+    }
+
+    .privacy-title{
+        font-size: 2.2rem;
+        margin-bottom: .7rem;
+        color: var(--text-dark);
+    }
+
+    .privacy-meta{
+        color: var(--text-muted);
+        line-height: 1.8;
+    }
+
+    .privacy-grid{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.3rem;
+    }
+
+    .privacy-box{
+        background: #fff;
+        border: 1px solid var(--blue-border);
+        border-radius: var(--radius-lg);
+        padding: 1.4rem;
+        transition: .25s;
+        position: relative;
+        z-index: 2;
+    }
+
+    .privacy-box:hover{
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px rgba(0,0,0,.05);
+    }
+
+    .privacy-box h3{
+        font-size: 1.05rem;
+        margin-bottom: 1rem;
+        color: var(--blue-primary);
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+    .privacy-box p{
+        color: var(--text-muted);
+        line-height: 1.8;
+    }
+
+    .privacy-box ul{
+        padding-left: 1rem;
+    }
+
+    .privacy-box ul li{
+        margin-bottom: .7rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+    }
+
+    .privacy-highlight{
+        background: linear-gradient(135deg, #eff6ff, #f8fbff);
+        border: 1px dashed var(--blue-primary);
+    }
+
+    .privacy-footer{
+        margin-top: 2rem;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: .92rem;
+    }
+
+    @media(max-width:768px){
+
+        .privacy-card{
+            padding: 1.3rem;
+        }
+
+        .privacy-grid{
+            grid-template-columns: 1fr;
+        }
+
+        .privacy-title{
+            font-size: 1.7rem;
+        }
+    }
+</style>
+
+<section class="privacy-section">
+    <div class="container">
+
+        <div class="privacy-wrapper">
+
+            <div class="privacy-card">
+
+                <div class="privacy-header">
+
+                    <div class="privacy-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+
+                    <h1 class="privacy-title">
+                        Privacy Policy
+                    </h1>
+
+                    <div class="privacy-meta">
+                        Effective Date: 16 May 2026 <br>
+                        Website: bti.edu.bd
+                    </div>
+
+                </div>
+
+                <div class="privacy-grid">
+
+                    <div class="privacy-box">
+                        <h3>
+                            <i class="fas fa-database"></i>
+                            ১. আমরা কী তথ্য সংগ্রহ করি
+                        </h3>
+
+                        <ul>
+                            <li>ব্যক্তিগত তথ্য: নাম, পিতার নাম, মাতার নাম, জন্ম তারিখ, জাতীয় পরিচয়পত্র নম্বর</li>
+                            <li>যোগাযোগ তথ্য: মোবাইল নম্বর, ইমেইল ঠিকানা, বর্তমান ও স্থায়ী ঠিকানা</li>
+                            <li>শিক্ষাগত তথ্য: শিক্ষাগত যোগ্যতা, কোর্স তথ্য, পরীক্ষার ফলাফল</li>
+                            <li>আর্থিক তথ্য: পেমেন্ট লেনদেনের রেকর্ড (bKash)</li>
+                            <li>প্রযুক্তিগত তথ্য: IP address, browser তথ্য, login সময়</li>
+                        </ul>
+                    </div>
+
+                    <div class="privacy-box">
+                        <h3>
+                            <i class="fas fa-gears"></i>
+                            ২. কীভাবে তথ্য ব্যবহার করা হয়
+                        </h3>
+
+                        <ul>
+                            <li>শিক্ষার্থী নিবন্ধন ও পরিচয় যাচাই করতে</li>
+                            <li>সনদপত্র (Certificate) তৈরি ও যাচাই করতে</li>
+                            <li>পরীক্ষার ফলাফল প্রকাশ করতে</li>
+                            <li>পেমেন্ট প্রক্রিয়াকরণ করতে</li>
+                            <li>প্রতিষ্ঠান ও শিক্ষার্থীদের সাথে যোগাযোগ করতে</li>
+                            <li>সিস্টেম নিরাপত্তা নিশ্চিত করতে</li>
+                        </ul>
+                    </div>
+
+                    <div class="privacy-box privacy-highlight">
+                        <h3>
+                            <i class="fas fa-lock"></i>
+                            ৩. তথ্য সুরক্ষা
+                        </h3>
+
+                        <ul>
+                            <li>সকল পাসওয়ার্ড PBKDF2 SHA-256 encryption দিয়ে সংরক্ষিত</li>
+                            <li>SSL/TLS সংযোগের মাধ্যমে সকল তথ্য আদান-প্রদান হয়</li>
+                            <li>শুধুমাত্র অনুমোদিত কর্মকর্তারা তথ্য দেখতে পারেন</li>
+                            <li>তৃতীয় পক্ষের কাছে কোনো তথ্য বিক্রি করা হয় না</li>
+                        </ul>
+                    </div>
+
+                    <div class="privacy-box">
+                        <h3>
+                            <i class="fas fa-network-wired"></i>
+                            ৪. তৃতীয় পক্ষ সেবা
+                        </h3>
+
+                        <p>
+                            আমরা নিম্নলিখিত তৃতীয় পক্ষ সেবা ব্যবহার করি:
+                        </p>
+
+                        <ul>
+                            <li>bKash — পেমেন্ট প্রক্রিয়াকরণের জন্য</li>
+                            <li>Cloudflare — নিরাপত্তা ও CDN সেবার জন্য</li>
+                        </ul>
+
+                        <p>
+                            এই সেবাগুলোর নিজস্ব Privacy Policy প্রযোজ্য।
+                        </p>
+                    </div>
+
+                    <div class="privacy-box">
+                        <h3>
+                            <i class="fas fa-cookie-bite"></i>
+                            ৫. Cookie নীতি
+                        </h3>
+
+                        <p>
+                            আমাদের ওয়েবসাইট session cookie ব্যবহার করে। এই cookie গুলো:
+                        </p>
+
+                        <ul>
+                            <li>Login session বজায় রাখতে ব্যবহার হয়</li>
+                            <li>Browser বন্ধ করলে স্বয়ংক্রিয়ভাবে মুছে যায়</li>
+                            <li>কোনো ব্যক্তিগত তথ্য tracking করে না</li>
+                        </ul>
+                    </div>
+
+                    <div class="privacy-box">
+                        <h3>
+                            <i class="fas fa-user-check"></i>
+                            ৬. আপনার অধিকার
+                        </h3>
+
+                        <p>
+                            আপনার অধিকার আছে:
+                        </p>
+
+                        <ul>
+                            <li>আপনার তথ্য দেখার</li>
+                            <li>ভুল তথ্য সংশোধন করার</li>
+                            <li>অ্যাকাউন্ট মুছে ফেলার অনুরোধ করার</li>
+                        </ul>
+
+                        <p>
+                            যোগাযোগ: <strong>info@bti.edu.bd</strong>
+                        </p>
+                    </div>
+
+                    <div class="privacy-box">
+                        <h3>
+                            <i class="fas fa-rotate"></i>
+                            ৭. পরিবর্তন
+                        </h3>
+
+                        <p>
+                            আমরা যেকোনো সময় এই Privacy Policy পরিবর্তন করার অধিকার রাখি।
+                            পরিবর্তন হলে ওয়েবসাইটে প্রকাশ করা হবে।
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="privacy-footer">
+                    © 2026 Bangladesh Technical Institute (BTI) — Privacy & Data Protection Policy
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

@@ -35,10 +35,6 @@
         <span>
           <i class="fas fa-registered"></i> Reg: {{REG_NO}}
           <span class="govt-divider">|</span>
-          <a href="{% url 'dashboard:institution_dashboard' %}">Institute</a>
-          <span class="govt-divider">|</span>
-          <a href="{% url 'dashboard:admin_dashboard' %}">Admin</a>
-          <span class="govt-divider">|</span>
           <a href="{% url 'verify_certificate'%}"
             ><i class="fas fa-search"></i> Verify Certificate</a
           >
@@ -66,10 +62,10 @@
 
         <!-- Nav links -->
         <div class="nav-links">
-          <a href="#about">About</a>
-          <a href="#courses">Courses</a>
-          <a href="#training-centers">Training Centers</a>
-          <a href="#verify-section">Verify Certificate</a>
+          <a href="{% url 'home' %}#about">About</a>
+          <a href="{% url 'home' %}#courses">Courses</a>
+          <a href="{% url 'home' %}#training-centers">Training Centers</a>
+          <a href="{% url 'home' %}#verify-section">Verify Certificate</a>
           <a href="{% url 'dashboard:institution_dashboard' %}">Institute</a>
           <a href="{% url 'dashboard:admin_dashboard' %}" class="admin-badge"
             >Admin Portal</a
@@ -130,7 +126,7 @@
         <div class="footer-col">
           <h4>Courses</h4>
           <ul>
-            {% for course in courses %}
+            {% for course in courses|slice:":5" %}
             <li>
               <a href="#courses">{{course.name}}</a>
             </li>
@@ -141,9 +137,9 @@
         <div class="footer-col">
           <h4>Support</h4>
           <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li><a href="{% url 'privacy_view'%}">Privacy Policy</a></li>
+            <li><a href="{% url 'trems_condition'%}">Terms of Service</a></li>
+            <li><a href="{% url 'contact_us'%}">Contact Us</a></li>
           </ul>
         </div>
       </div>
@@ -151,14 +147,13 @@
       <div style="max-width: 1280px; margin: 0 auto">
         <div class="footer-bottom">
           <p>
-            © <?= date('Y') ?> <?= e($site_name) ?>. All rights reserved. |
-            Government Approved Technical Education
+           <span id="footer-text"></span>
           </p>
           <div class="footer-bottom-links">
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="verify/index.php">Verify Cert</a>
-            <a href="student/login.php">Student Portal</a>
+            <a href="{% url 'privacy_view' %}">Privacy</a>
+            <a href="{% url 'trems_condition'%}">Terms</a>
+            <a href="{% url 'verify_certificate'%}">Verify Cert</a>
+            <a href="{% url 'dashboard:institution_dashboard' %}">Institution Portal</a>
           </div>
         </div>
       </div>

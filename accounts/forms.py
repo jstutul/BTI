@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile,Institution
+from .models import Profile,Institution,ContactMessage
 
 User = get_user_model()
 
@@ -90,3 +90,7 @@ class UserAdminBalanceForm(forms.ModelForm):
         fields = ('balance',)
 
 
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['name', 'email', 'phone', 'subject', 'message']

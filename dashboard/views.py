@@ -3,7 +3,7 @@ from accounts.decorators import role_required
 from django.http import JsonResponse
 from django.core.mail import EmailMessage
 from django.views.decorators.csrf import csrf_exempt
-from accounts.models import Course, Session,Institution,Profile,Student,Result,Certificate,PaymentDeposit,BalanceTransaction,Chairman
+from accounts.models import Course, Session,Institution,Profile,Student,Result,Certificate,PaymentDeposit,BalanceTransaction,Chairman,ContactMessage
 from dashboard.forms import CourseForm,SessionForm,InstitutionForm,StudentForm,StudentEditForm,ResultForm,CertificateForm,CertificateEditForm,ChairmanForm
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -1215,8 +1215,8 @@ def bkash_callback(request):
 
     with transaction.atomic():
         user = request.user
-        user.balance += deposit.base_amount
-        user.save(update_fields=["balance"])
+        # user.balance += deposit.base_amount
+        # user.save(update_fields=["balance"])
 
         BalanceTransaction.objects.create(
             user=user,
@@ -1238,9 +1238,12 @@ def bkash_callback(request):
 @role_required(['admin', 'institution'])
 def transaction_list(request):
     transactions = BalanceTransaction.objects.filter(user=request.user)
-
+    total_deposit = transactions.filter(transaction_type='credit').aggregate(Sum('amount'))['amount__sum'] or 0
+    total_paid = transactions.filter(transaction_type='debit').aggregate(Sum('amount'))['amount__sum'] or 0
     return render(request, "dashboard/payments/transactions.html", {
-        "transactions": transactions
+        "transactions": transactions,
+        "total_deposit":total_deposit,
+        "total_paid":total_paid
     })
 
 
@@ -1261,3 +1264,9 @@ def chairman_settings(request):
         'form': form,
         'chairman': chairman
     })
+
+
+@role_required(['admin'])
+def contact_view(request):
+    data = ContactMessage.objects.all()
+    return render(request,'dashboard/contact.html',{'data':data})

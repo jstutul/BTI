@@ -435,3 +435,14 @@ class PaymentDeposit(models.Model):
         return f"{self.user} - {self.gateway} - {self.status} - {self.base_amount}"
 
 
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=120)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

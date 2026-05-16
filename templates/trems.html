@@ -1,0 +1,331 @@
+{% extends "base/guest.html" %}
+{% load static %}
+{% block main %}
+
+<style>
+    .terms-section{
+        padding: 3rem 0;
+    }
+
+    .terms-wrapper{
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .terms-card{
+        background: var(--white);
+        border: 1px solid var(--blue-border);
+        border-radius: var(--radius-xl);
+        padding: 2rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .terms-header{
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--blue-border);
+    }
+
+    .terms-badge{
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        background: var(--blue-light);
+        color: var(--blue-primary);
+        padding: .45rem .9rem;
+        border-radius: 999px;
+        font-size: .85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .terms-title{
+        font-size: 2.1rem;
+        margin-bottom: .6rem;
+        color: var(--text-dark);
+    }
+
+    .terms-meta{
+        color: var(--text-muted);
+        font-size: .95rem;
+        line-height: 1.8;
+    }
+
+    .terms-block{
+        margin-bottom: 2rem;
+    }
+
+    .terms-block:last-child{
+        margin-bottom: 0;
+    }
+
+    .terms-block h3{
+        font-size: 1.15rem;
+        margin-bottom: 1rem;
+        color: var(--blue-primary);
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+    .terms-block p{
+        color: var(--text-muted);
+        line-height: 1.9;
+    }
+
+    .terms-list{
+        padding-left: 1.2rem;
+    }
+
+    .terms-list li{
+        margin-bottom: .8rem;
+        color: var(--text-muted);
+        line-height: 1.8;
+    }
+
+    .warning-box{
+        background: #fff5f5;
+        border: 1px solid #fecaca;
+        color: #dc2626;
+        padding: 1rem 1.2rem;
+        border-radius: var(--radius-lg);
+        margin-top: 1rem;
+        font-weight: 500;
+    }
+
+    .contact-box{
+        background: var(--blue-light);
+        border: 1px solid var(--blue-border);
+        border-radius: var(--radius-lg);
+        padding: 1.3rem;
+    }
+
+    .contact-box p{
+        margin-bottom: .5rem;
+    }
+
+    .terms-footer{
+        text-align: center;
+        margin-top: 2rem;
+        color: var(--text-muted);
+        font-size: .9rem;
+    }
+
+    @media(max-width:768px){
+
+        .terms-card{
+            padding: 1.4rem;
+        }
+
+        .terms-title{
+            font-size: 1.6rem;
+        }
+
+        .terms-block h3{
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<section class="terms-section">
+    <div class="container">
+
+        <div class="terms-wrapper">
+
+            <div class="terms-card">
+
+                <div class="terms-header">
+
+                    <span class="terms-badge">
+                        <i class="fas fa-file-contract"></i>
+                        TERMS OF USE
+                    </span>
+
+                    <h1 class="terms-title">
+                        Terms & Conditions
+                    </h1>
+
+                    <div class="terms-meta">
+                        Effective Date: 16 May 2026 <br>
+                        Bangladesh Technical Institute (BTI) <br>
+                        Registration No: C-170275/2013
+                    </div>
+
+                </div>
+
+                <div class="terms-block">
+                    <h3>
+                        <i class="fas fa-circle-info"></i>
+                        ১. সাধারণ শর্তাবলী
+                    </h3>
+
+                    <p>
+                        বাংলাদেশ টেকনিক্যাল ইনস্টিটিউট (BTI) এর ওয়েবসাইট ও সেবা ব্যবহার করে
+                        আপনি নিম্নলিখিত শর্তাবলী মেনে নিচ্ছেন।
+                    </p>
+                </div>
+
+                <div class="terms-block">
+                    <h3>
+                        <i class="fas fa-user-check"></i>
+                        ২. সেবা ব্যবহারের যোগ্যতা
+                    </h3>
+
+                    <ul class="terms-list">
+                        <li>শুধুমাত্র নিবন্ধিত শিক্ষার্থী ও অনুমোদিত প্রতিষ্ঠান এই সিস্টেম ব্যবহার করতে পারবে</li>
+                        <li>একটি অ্যাকাউন্ট শুধুমাত্র একজন ব্যক্তির জন্য</li>
+                        <li>অ্যাকাউন্টের তথ্য অন্যের সাথে শেয়ার করা নিষিদ্ধ</li>
+                    </ul>
+                </div>
+
+                <div class="terms-block">
+                    <h3>
+                        <i class="fas fa-user-graduate"></i>
+                        ৩. শিক্ষার্থীর দায়িত্ব
+                    </h3>
+
+                    <ul class="terms-list">
+                        <li>সঠিক ও সত্য তথ্য প্রদান করতে হবে</li>
+                        <li>ভুয়া বা মিথ্যা তথ্য দিলে নিবন্ধন বাতিল হবে</li>
+                        <li>লগিন তথ্য (username/password) নিরাপদ রাখতে হবে</li>
+                        <li>নির্ধারিত সময়ে পরীক্ষা ফি পরিশোধ করতে হবে</li>
+                    </ul>
+                </div>
+
+                <div class="terms-block">
+                    <h3>
+                        <i class="fas fa-building"></i>
+                        ৪. প্রতিষ্ঠানের দায়িত্ব
+                    </h3>
+
+                    <ul class="terms-list">
+                        <li>শুধুমাত্র BTI অনুমোদিত প্রতিষ্ঠান শিক্ষার্থী নিবন্ধন করতে পারবে</li>
+                        <li>সকল শিক্ষার্থীর তথ্য সঠিকভাবে প্রদান করতে হবে</li>
+                        <li>নির্ধারিত ফি সময়মতো পরিশোধ করতে হবে</li>
+                        <li>অনুমোদন ছাড়া অন্য প্রতিষ্ঠানের তথ্য দেখা বা পরিবর্তন করা নিষিদ্ধ</li>
+                    </ul>
+                </div>
+
+                <div class="terms-block">
+                    <h3>
+                        <i class="fas fa-certificate"></i>
+                        ৫. সনদপত্র (Certificate) সংক্রান্ত
+                    </h3>
+
+                    <ul class="terms-list">
+                        <li>সনদপত্র শুধুমাত্র উত্তীর্ণ শিক্ষার্থীদের দেওয়া হবে</li>
+                        <li>সনদপত্রে কোনো পরিবর্তন বা জালিয়াতি আইনত দণ্ডনীয়</li>
+                        <li>সনদপত্র যাচাই করতে bti.edu.bd/verify/ ব্যবহার করুন</li>
+                        <li>হারিয়ে যাওয়া সনদপত্রের জন্য অফিসে যোগাযোগ করুন</li>
+                    </ul>
+                </div>
+
+                <div class="terms-block">
+                    <h3>
+                        <i class="fas fa-money-check-dollar"></i>
+                        ৬. পেমেন্ট নীতি
+                    </h3>
+
+                    <ul class="terms-list">
+                        <li>সকল পেমেন্ট bKash এর মাধ্যমে করা হয়</li>
+                        <li>পেমেন্ট সম্পন্ন হলে তা ফেরতযোগ্য নয়</li>
+                        <li>পেমেন্ট সংক্রান্ত সমস্যায় info@bti.edu.bd তে যোগাযোগ করুন</li>
+                        <li>bKash এর অতিরিক্ত চার্জ (5%) প্রযোজ্য</li>
+                    </ul>
+                </div>
+
+                <div class="terms-block">
+                    <h3>
+                        <i class="fas fa-ban"></i>
+                        ৭. নিষিদ্ধ কার্যক্রম
+                    </h3>
+
+                    <ul class="terms-list">
+                        <li>ভুয়া তথ্য দিয়ে নিবন্ধন</li>
+                        <li>অন্যের অ্যাকাউন্ট ব্যবহার</li>
+                        <li>সিস্টেমে অননুমোদিত প্রবেশের চেষ্টা</li>
+                        <li>ভুয়া সনদপত্র তৈরি বা ব্যবহার</li>
+                        <li>সিস্টেমকে ক্ষতিগ্রস্ত করার চেষ্টা</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        এই নিয়ম ভঙ্গ করলে অ্যাকাউন্ট বাতিল ও আইনি ব্যবস্থা নেওয়া হবে।
+                    </div>
+                </div>
+
+                <div class="terms-block">
+                    <h3>
+                        <i class="fas fa-scale-balanced"></i>
+                        ৮. দায়বদ্ধতার সীমা
+                    </h3>
+
+                    <ul class="terms-list">
+                        <li>ইন্টারনেট সংযোগ সমস্যার কারণে সেবা বিঘ্নিত হলে</li>
+                        <li>তৃতীয় পক্ষের (bKash, Cloudflare) সেবা সমস্যায়</li>
+                        <li>শিক্ষার্থীর নিজের অসতর্কতায় তথ্য ফাঁস হলে</li>
+                    </ul>
+                </div>
+
+                <div class="terms-block">
+                    <h3>
+                        <i class="fas fa-gavel"></i>
+                        ৯. আইনি এখতিয়ার
+                    </h3>
+
+                    <p>
+                        এই শর্তাবলী গণপ্রজাতন্ত্রী বাংলাদেশ এর আইন অনুযায়ী পরিচালিত হবে।
+                        যেকোনো বিরোধ ঢাকা আদালতে নিষ্পত্তি হবে।
+                    </p>
+                </div>
+
+                <div class="terms-block">
+                    <h3>
+                        <i class="fas fa-envelope"></i>
+                        ১০. যোগাযোগ
+                    </h3>
+
+                    <div class="contact-box">
+
+                        <p><strong>Bangladesh Technical Institute (BTI)</strong></p>
+
+                        <p>
+                            <i class="fas fa-location-dot"></i>
+                            Dhaka, Bangladesh
+                        </p>
+
+                        <p>
+                            <i class="fas fa-phone"></i>
+                            +880 1928-638011
+                        </p>
+
+                        <p>
+                            <i class="fas fa-envelope"></i>
+                            info@bti.edu.bd
+                        </p>
+
+                        <p>
+                            <i class="fas fa-globe"></i>
+                            bti.edu.bd
+                        </p>
+
+                        <p>
+                            <i class="fas fa-id-badge"></i>
+                            Registration No: C-170275/2013
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="terms-footer">
+                    © 2026 Bangladesh Technical Institute (BTI). All Rights Reserved.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

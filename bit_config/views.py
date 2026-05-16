@@ -4,7 +4,53 @@ from django.utils import timezone
 from accounts.models import *
 from django.db.models import Q
 from django.http import JsonResponse
+from accounts.forms import ContactForm
+from django.shortcuts import render, redirect
+from django.contrib import messages
 
+def courses_view(request):
+    courses = Course.objects.filter(is_active=True)
+    return render(request,'courses.html',{"courses":courses})
+
+def trainning_center(request):
+    training_centers = Institution.objects.filter(is_active=True)
+
+    centers_data = []
+    for tc in training_centers:
+        courses = Course.objects.filter(
+            students__institution=tc
+        ).distinct()
+        course_names = [c.name for c in courses]
+
+        centers_data.append({
+            'name': tc.name,
+            'district': tc.district,
+            'upazila': tc.upazila,
+            'mobile': tc.mobile,
+            'reg_no': tc.branch_code,
+            'approved_date': getattr(tc, 'approved_date', None),
+            'courses': course_names
+        })
+
+    return render(request,'center.html',{'training_centers': centers_data})
+
+def trems_condition(request):
+    return render(request,'trems.html')
+
+def privacy_view(request):
+    return render(request,'privacy.html')
+
+def contact_us(request):
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Your message has been saved successfully. We’ll get back to you soon.")
+            return redirect('contact_us')
+    else:
+        form = ContactForm()
+
+    return render(request, "contact_us.html", {"form": form})
 
 def home(request):
 

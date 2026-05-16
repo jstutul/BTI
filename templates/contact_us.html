@@ -1,0 +1,170 @@
+{% extends "base/guest.html" %}
+{% load static %}
+{% block main %}
+
+<style>
+.contact-section{
+    padding: 3rem 0;
+}
+
+.contact-card{
+    max-width: 1000px;
+    margin: auto;
+    background: var(--white);
+    border: 1px solid var(--blue-border);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.contact-header{
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.contact-header h2{
+    font-size: 2rem;
+    color: var(--blue-primary);
+}
+
+.contact-grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.contact-group{
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-group label{
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.contact-group input,
+.contact-group textarea{
+    padding: 10px;
+    border: 1px solid var(--blue-border);
+    border-radius: 8px;
+    outline: none;
+}
+
+.contact-group textarea{
+    min-height: 120px;
+    resize: none;
+}
+
+.full{
+    grid-column: span 2;
+}
+
+.btn-submit{
+    background: var(--blue-primary);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.contact-info{
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--blue-light);
+    border-radius: 12px;
+}
+
+@media(max-width:768px){
+    .contact-grid{
+        grid-template-columns: 1fr;
+    }
+
+    .full{
+        grid-column: span 1;
+    }
+}
+</style>
+
+<section class="contact-section">
+    <div class="container">
+
+        <div class="contact-card">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} flash-message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="contact-header">
+                <h2>Contact Us</h2>
+                <p>We are here to help you anytime</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="contact-grid">
+
+                    <div class="contact-group">
+                        <label>Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+
+                    <div class="contact-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+
+                    <div class="contact-group">
+                        <label>Phone</label>
+                        <input type="text" name="phone">
+                    </div>
+
+                    <div class="contact-group">
+                        <label>Subject</label>
+                        <input type="text" name="subject" required>
+                    </div>
+
+                    <div class="contact-group full">
+                        <label>Message</label>
+                        <textarea name="message" required></textarea>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    Send Message
+                </button>
+
+            </form>
+
+            <div class="contact-info">
+                <p><strong>Bangladesh Technical Institute (BTI)</strong></p>
+                <p>📍 Dhaka, Bangladesh</p>
+                <p>📧 info@bti.edu.bd</p>
+                <p>📞 +880 1928-638011</p>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<script>
+    setTimeout(function () {
+        let messages = document.querySelectorAll('.flash-message');
+        messages.forEach(function (msg) {
+            msg.style.transition = "opacity 0.5s ease";
+            msg.style.opacity = "0";
+
+            setTimeout(() => {
+                msg.remove();
+            }, 500);
+        });
+    }, 3000);
+</script>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'dashboard/admin_base.html'%}
+{% load static %}
+{% block css%}
+<style>
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .3s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+/* checked state */
+.switch input:checked + .slider {
+    background-color: #28a745;
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(24px);
+}
+</style>
+{% endblock%}
+{% block content %}
+  <div class="topbar">
+    <div class="topbar-left"><h1>Transaction List</h1><p>লেনদেনের তালিকা — ৳{{STUDENT_FEE}}/শিক্ষার্থী</p></div>
+     <div class="topbar-right">
+      <a class="btn btn-red" href="{% url 'dashboard:deposit_page'%}">+ Add Deposit</a>
+    </div>
+</div>
+  {% if form.errors %}
+    <div class="alert alert-error">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+    <div class="page-body">
+        <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
+            <div class="stat-card"><div class="stat-icon ic-green">💰</div><div class="stat-data"><h3>{{ request.user.balance }}</h3><p>Balance</p></div></div>
+            <div class="stat-card"><div class="stat-icon ic-red">⏳</div><div class="stat-data"><h3>{{total_paid|default:"0" }}</h3><p>Total Paid</p></div></div>
+            <div class="stat-card"><div class="stat-icon ic-gold">📊</div><div class="stat-data"><h3>{{total_deposit|default:"0"}}</h3><p>Total Deposit</p></div></div>
+        </div>
+        <div class="card">
+            <div class="card-head"><span class="card-title">💳 Payment History</span></div>
+            <div class="table-responsive">
+                <table>
+                <thead>
+                    <tr>
+                        <th>Details</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for p in transactions %}
+                    <tr>
+                        <td>
+                            <div class="td-name">{{ p.note|default:"Balance Deposit" }}</div>
+                        </td>
+                        <td>৳ {{ p.amount }}</td>
+                        <td>{{ p.get_transaction_type_display }}</td>
+                        <td>{{ p.created_at|date:"d M, Y" }}</td>
+                        <td>
+                            <span class="badge {% if p.transaction_type == 'credit' %}badge-green{% else %}badge-red{% endif %}">
+                                {{ p.transaction_type|title }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="text-align:center;padding:20px;color:var(--muted);">No transactions yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock%}
